@@ -13,7 +13,7 @@ COPY pom.xml .
 RUN chmod +x mvnw
 
 # Build the application
-COPY src ./src
+COPY src ./SamvaadProject/src
 RUN ./mvnw clean package -DskipTests
 
 # Expose port 8080 (Spring Boot default)
