@@ -434,7 +434,7 @@ label[for="photoInput"]:hover {
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><a class="dropdown-item" href="#profile"><i class="bi bi-person-circle me-2"></i>Profile</a></li>
-                    <li><a class="dropdown-item" data-bs-target="#updateFacultyPasswordModel"  data-bs-toggle="modal"><i class="bi bi-lock-fill me-2"></i>Chance Password</a></li>
+                    <li><a class="dropdown-item" data-bs-target="#updateFacultyPasswordModel"  data-bs-toggle="modal"><i class="bi bi-lock-fill me-2"></i>Change Password</a></li>
                     <li>
                         <hr class="dropdown-divider">
                     </li>
@@ -468,7 +468,7 @@ label[for="photoInput"]:hover {
                     <div class="form-group mb-3 position-relative">
                         <label for="currentPassword" class="form-label"><b>Current Password</b></label>
                         <input type="password" name="currentPassword" id="currentPassword"
-                               class="form-control" placeholder="Enter your name" required>
+                               class="form-control" placeholder="Enter current password" required>
                         <button type="button" id="togglePassword1" class="btn btn-outline-secondary position-absolute end-0" style="top:30px;"><i class="bi bi-eye-slash  "
                              id="togglePasswordIcon1"  style="cursor: pointer;"></i></button>
                         <p id="invalidCurrentPassword" style="color:red;"></p>
@@ -478,7 +478,7 @@ label[for="photoInput"]:hover {
                     <div class="form-group mb-3  position-relative">
                         <label for="newPassword" class="form-label" ><b>Create New Password</b></label>
                         <input type="password" name="newPassword" id="newPassword" onkeyup="checkPasswordMatcher();"
-                               class="form-control" placeholder="Enter contact number" required>
+                               class="form-control" placeholder="Enter new password" required>
                         <button type="button" id="togglePassword2" class="btn btn-outline-secondary position-absolute end-0" style="top:30px;"><i class="bi bi-eye-slash  "
                           id="togglePasswordIcon2" style="cursor: pointer;"></i></button>
                         <p id="invalidCurrentPassword2" style="color:red;"> </p>
@@ -488,7 +488,7 @@ label[for="photoInput"]:hover {
                     <div class="form-group mb-3  position-relative">
                         <label for="confirmPassword" class="form-label"><b>Confirm Password</b></label>
                         <input type="password" name="confirmPassword"  id="confirmPassword"  class="form-control" onkeyup="checkPasswordMatcher();"
-                               placeholder="Enter email address"  required>
+                               placeholder="Confirm password"  required>
                         <button type="button" id="togglePassword3" class="btn btn-outline-secondary position-absolute end-0" style="top:30px;"><i class="bi bi-eye-slash  "
                              id="togglePasswordIcon3"  style="cursor: pointer;"></i></button>
 
