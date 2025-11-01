@@ -5,18 +5,20 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copy pom.xml and mvnw files
-COPY mvnw .
-COPY .mvn .mvn
-COPY pom.xml .
+COPY SamvaadProject/mvnw .
+COPY SamvaadProject/.mvn .mvn
+COPY SamvaadProject/pom.xml .
 
 # Make mvnw executable
 RUN chmod +x mvnw
 
+# Copy source code
+COPY SamvaadProject/src ./src
+
 # Build the application
-COPY src ./SamvaadProject/src
 RUN ./mvnw clean package -DskipTests
 
-# Expose port 8080 (Spring Boot default)
+# Expose port 8081
 EXPOSE 8081
 
 # Run the application
