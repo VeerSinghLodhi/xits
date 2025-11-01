@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Xansa IT Solutions | Login</title>
+
+    <!-- Bootstrap & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+          --primary-color: #FFC451;
+          --primary-dark: #e0a93d;
+          --primary-light: #ffdc82;
+          --accent-color: #ffae00;
+          --success-color: #10b981;
+          --danger-color: #ef4444;
+          --text-primary: #1f2937;
+          --text-secondary: #6b7280;
+          --border-color: #e5e7eb;
+          --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+          --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+          background: #ffffff;
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          padding: 1rem;
+          position: relative;
+          overflow-x: hidden;
+        }
+
+        body::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 300px;
+          background: linear-gradient(135deg, #FFC451 0%, #ffae00 50%, #ffe58a 100%);
+          opacity: 0.05;
+          z-index: 0;
+        }
+
+        .login-wrapper {
+          position: relative;
+          z-index: 1;
+          width: 100%;
+          max-width: 440px;
+        }
+
+        .login-container {
+          background: #ffffff;
+          border-radius: 20px;
+          box-shadow: var(--shadow-xl);
+          padding: 3rem 2.5rem;
+          width: 100%;
+          backdrop-filter: blur(10px);
+          transition: all 0.3s ease;
+        }
+
+        .login-container:hover {
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo-container {
+          display: flex;
+          justify-content: center;
+          margin-bottom: 1rem;
+        }
+
+        .logo img {
+          width: 180px;
+          height: auto;
+          object-fit: contain;
+        }
+
+        .login-header {
+          text-align: center;
+          margin-bottom: 2.5rem;
+        }
+          .login-header .welcome-text {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 400;
+            margin-bottom: 0.25rem;
+        }
+
+        .login-header h1 {
+          color: var(--text-primary);
+          font-weight: 700;
+          font-size: 1.875rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .login-header .company-name {
+          background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          font-weight: 600;
+          font-size: 1.1rem;
+        }
+
+        .form-group {
+          margin-bottom: 1.5rem;
+        }
+
+        .input-wrapper {
+          position: relative;
+        }
+
+        .input-icon {
+          position: absolute;
+          top: 50%;
+          transform: translateY(-50%);
+          left: 1rem;
+          color: var(--text-secondary);
+          font-size: 1.125rem;
+          transition: all 0.3s ease;
+          z-index: 1;
+        }
+
+        .form-control {
+          width: 100%;
+          padding: 0.875rem 1rem 0.875rem 3rem;
+          border-radius: 12px;
+          border: 2px solid var(--border-color);
+          font-size: 0.9375rem;
+          background: #fafafa;
+          color: var(--text-primary);
+          transition: all 0.3s ease;
+        }
+
+        .form-control:hover {
+          border-color: var(--primary-light);
+          background: #ffffff;
+        }
+
+        .form-control:focus {
+          outline: none;
+          border-color: var(--primary-color);
+          background: #ffffff;
+          box-shadow: 0 0 0 4px rgba(255, 196, 81, 0.2);
+        }
+
+        .forgot-password-wrapper {
+          text-align: right;
+          margin-bottom: 1.75rem;
+        }
+
+        .forgot-link {
+          color: var(--primary-color);
+          font-size: 0.875rem;
+          font-weight: 500;
+          text-decoration: none;
+          transition: all 0.3s ease;
+        }
+
+        .forgot-link:hover {
+          color: var(--primary-dark);
+          transform: translateX(2px);
+        }
+
+        .btn-login {
+          width: 100%;
+          background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+          color: white;
+          font-weight: 600;
+          font-size: 1rem;
+          border: none;
+          padding: 0.875rem 1.5rem;
+          border-radius: 12px;
+          transition: all 0.3s ease;
+          cursor: pointer;
+          box-shadow: var(--shadow-md);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .btn-login:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 12px 24px -6px rgba(255, 196, 81, 0.4);
+        }
+
+        .alert-box {
+          border-radius: 12px;
+          padding: 1rem 1.25rem;
+          margin-bottom: 1.5rem;
+          animation: slideDown 0.4s ease;
+          background: #fff8e1;
+          color: #8b5e00;
+          border-left: 4px solid var(--primary-color);
+        }
+
+        @keyframes slideDown {
+          from { transform: translateY(-20px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+
+        .visually-hidden {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip: rect(0, 0, 0, 0);
+          border-width: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="login-wrapper">
+    <div class="login-container">
+        <div class="logo-container">
+            <div class="logo">
+                <img src="../Images/xansaitsulutionsLogo.png" alt="Xansa IT Solutions Logo">
+            </div>
+        </div>
+
+        <div class="login-header">
+            <p class="welcome-text">Welcome to</p>
+            <h1 class="company-name">Xansa IT Solutions</h1>
+            <p class="welcome-text" style="margin-top: 0.4rem; font-size: 0.7rem;">Enter a valid username assigned by the office.</p>
+        </div>
+
+        <div th:if="${param.error}" class="alert alert-danger alert-box" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <strong>Login Failed:</strong> Invalid username or password.
+        </div>
+
+        <form th:action="@{/login}" method="post">
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <input type="text" id="username" name="username" class="form-control" placeholder="Username" required>
+                    <i class="bi bi-person-fill input-icon"></i>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="input-wrapper">
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+                    <i class="bi bi-lock-fill input-icon"></i>
+                </div>
+            </div>
+
+            <div class="forgot-password-wrapper">
+                <a href="/request-password-update" class="forgot-link">
+                    Forgot password? <i class="fas fa-arrow-right" style="font-size: 0.75rem;"></i>
+                </a>
+            </div>
+
+            <button type="submit" class="btn btn-login">
+                <i class="fas fa-sign-in-alt me-2"></i>Sign In
+            </button>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

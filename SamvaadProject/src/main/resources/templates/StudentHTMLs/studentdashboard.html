@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Student || Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="_csrf" th:content="${_csrf.token}" />
+    <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            font-size: 0.9rem;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 70px 0 0;
+            box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.1);
+            min-height: 100vh;
+        }
+
+        .sidebar .nav-link {
+            font-weight: 500;
+            color: #333;
+            padding: 0.75rem 1rem;
+            margin: 0.125rem 0;
+            border-radius: 0.375rem;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            color: var(--primary-color);
+            background-color: rgba(13, 110, 253, 0.1);
+        }
+
+        .sidebar .nav-link i {
+            margin-right: 0.5rem;
+        }
+
+        .dashboard-section {
+            display: none;
+        }
+
+        .dashboard-section.active {
+            display: block;
+        }
+
+        .nav-tabs .nav-link {
+            color: #000;
+            font-weight: 500;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: #f39c12 !important;
+        }
+    /*
+        .card {
+            border-radius: 12px;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+        }
+*/
+         .card.shadow-sm {
+            border-radius: 15px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card.shadow-sm:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+
+
+         /* Remove arrows */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+    input[type=number] {
+        -moz-appearance: textfield;
+    }
+
+        #home .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease-in-out;
+        }
+
+        #home .card:hover {
+            transform: translateY(-5px);
+        }
+
+        #home .emoji {
+            font-size: 2rem;
+        }
+
+
+  .card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  width: 100%;
+ /* max-width: 380px;  */
+  margin: auto;
+}
+
+ .card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.1);
+}
+
+/* Admin profile section */
+ .admin-profile {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.admin-avatar {
+  width: 70px;
+  height: 70px;
+ /* background: linear-gradient(135deg, #4f46e5, #7c3aed); */
+  border-radius: 50%;
+  border:2px solid #fff;
+  margin-right: 16px;
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+}
+
+.admin-info h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.admin-info .role {
+  font-size: 14px;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+/* Contact info section */
+ .contact-info {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 16px;
+}
+
+ .contact-item {
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+}
+
+ .contact-item-icon {
+  width: 38px;
+  height: 38px;
+  background-color: #f3f4f6;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  color: #4f46e5;
+  transition: background 0.3s ease;
+}
+
+#adminAdministrator .contact-item-icon:hover {
+  background-color: #eef2ff;
+}
+
+.icon-sm {
+  width: 20px;
+  height: 20px;
+}
+
+.contact-label {
+  font-size: 13px;
+  color: #9ca3af;
+  margin: 0;
+}
+
+.contact-value {
+  font-size: 15px;
+  color: #1f2937;
+  font-weight: 500;
+  margin: 0;
+}
+
+      #dashboard-shortcut-student a {
+    color: #212529;
+    text-decoration: none;
+    transition: transform 0.2s ease, color 0.2s ease;
+    display: inline-block;
+    width: 100%;
+    padding: 8px 0;
+    border-radius: 10px;
+  }
+
+ #dashboard-shortcut-student a:hover {
+    transform: scale(1.05);
+    color: #FFBB33;
+    background-color: #f8f9fa;
+  }
+
+#dashboard-shortcut-student i {
+    margin-bottom: 4px;
+  }
+
+#dashboard-shortcut-student span {
+    font-size: 0.9rem;
+  }
+   h4 {
+      font-weight: 600;
+      color: #FFBB33;
+    }
+    </style>
+</head>
+
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-dark sticky-top bg-light flex-md-nowrap p-2 shadow">
+    <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center " href="#">
+            <!--            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" width="45" height="45" class="me-2">-->
+            <img src="../Images/xansaitsulutionsLogo.png" width="150" height="60" alt="Logo">
+<!--            <span style="color:black;"><i class="bi bi-person-circle me-1"></i><span-->
+<!--                    th:text="${user_master.fullName}"></span></span>-->
+        </a>
+
+        <div class="d-flex align-items-center">
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownUser"
+                   data-bs-toggle="dropdown">
+                    <img th:if="${user_master.photoPath != null}"
+                         th:src="@{/userphoto/{id}(id=${user_master.userId})}" class="rounded-circle me-2 shadow-sm "
+                         width="40" height="40">
+                    <img th:unless="${user_master.photoPath != null}"
+                         src="../Images/noprofilepic.png" class="rounded-circle me-2 shadow-sm "
+                         width="40" height="40">
+<!--                    <span class="d-none d-sm-inline text-dark" th:text="${user_master.fullName}"></span>-->
+                    <span class=" text-dark" th:text="${user_master.fullName}"></span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#profile" ><i class="bi bi-person-circle me-2"></i>Profile</a></li>
+                    <li><a class="dropdown-item" data-bs-target="#updateStudentPasswordModel"  data-bs-toggle="modal"><i class="bi bi-lock-fill me-2"></i>Chance Password</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" th:href="@{/logout}"><i
+                            class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                </ul>
+            </div>
+        </div>
+        <button class="btn btn-outline-light d-md-none me-2" type="button" data-bs-toggle="collapse"
+                data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span style="color:black"><i class="bi bi-list"></i></span>
+        </button>
+    </div>
+</nav>
+
+<div class="modal fade" id="updateStudentPasswordModel" tabindex="-1" aria-labelledby="updateStudentPasswordModelLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title text-center" id="updateStudentPasswordModelLabel">Update Password</h5>
+                <button type="button" class="btn-close btn-close-dark" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <form id="updateStudentPasswordForm" class="form-div p-3" method="post"   >
+
+                    <div class="form-group mb-3 position-relative">
+                        <label for="currentPassword" class="form-label"><b>Current Password</b></label>
+                        <input type="password" name="currentPassword" id="currentPassword"
+                               class="form-control" placeholder="Enter your name" required>
+                        <button type="button" id="togglePassword1" class="btn btn-outline-secondary position-absolute end-0" style="top:30px;"><i class="bi bi-eye-slash  "
+                                                                                                                                                  id="togglePasswordIcon1"  style="cursor: pointer;"></i></button>
+                        <p id="invalidCurrentPassword" style="color:red;"> </p>
+                    </div>
+
+
+                    <div class="form-group mb-3  position-relative">
+                        <label for="newPassword" class="form-label" ><b>Create New Password</b></label>
+                        <input type="password" name="newPassword" id="newPassword" onkeyup="checkPasswordMatcher();"
+                               class="form-control" placeholder="Enter contact number" required>
+                        <button type="button" id="togglePassword2" class="btn btn-outline-secondary position-absolute end-0" style="top:30px;"><i class="bi bi-eye-slash  "
+                                                                                                                                                  id="togglePasswordIcon2" style="cursor: pointer;"></i></button>
+                        <p id="invalidCurrentPassword2" style="color:red;"> </p>
+                        <p id="newPasswordError" style="font-size:12px;margin-left:15px;"> </p>
+                    </div>
+
+                    <div class="form-group mb-3  position-relative">
+                        <label for="confirmPassword" class="form-label"><b>Confirm Password</b></label>
+                        <input type="password" name="confirmPassword"  id="confirmPassword"  class="form-control" onkeyup="checkPasswordMatcher();"
+                               placeholder="Enter email address"  required>
+                        <button type="button" id="togglePassword3" class="btn btn-outline-secondary position-absolute end-0" style="top:30px;"><i class="bi bi-eye-slash  "
+                                                                                                                                                  id="togglePasswordIcon3"  style="cursor: pointer;"></i></button>
+
+                        <p id="confirmPasswordMessage" > </p>
+                    </div>
+                    <div class="text-end">
+                        <!-- Cancel Button -->
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <!-- Submit Button -->
+                        <input type="submit" class="btn btn-warning" value="Update">
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="assignmentfeedback" tabindex="-1" aria-labelledby="assignmentfeedbackModelLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title text-center" id="assignmentfeedbackModelLabel">Assignment <Feedback></Feedback></h5>
+                <button type="button" class="btn-close btn-close-dark" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <div id="feedbackContent">
+                    <h5>Loading feedback...</h5>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse bg-white">
+            <div class="position-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item"><a class="nav-link active" href="#home"><i
+                            class="bi bi-house me-2"></i>Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#profile"><i
+                            class="bi bi-person me-2"></i>Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#batch"><i class="bi bi-collection me-2"></i>My
+                        Batch</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#notes"><i
+                            class="bi bi-journal-richtext me-2"></i>Notes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#assignments"><i
+                            class="bi bi-file-earmark-text me-2"></i>Assignments</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#attendance"><i
+                            class="bi bi-calendar-check me-2"></i>Attendance</a></li>
+              </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" id="dashboardContent">
+            <!-- Home -->
+            <div id="home" class="dashboard-section active">
+
+                <div class="row my-4">
+                    <div class="col-lg-8 col-md-8 ">
+                        <div id="adminAdministrator" class="mb-3">
+                    <div class="card">
+                        <div class="admin-profile">
+<!--                            <div class="admin-avatar">X</div>-->
+                            <!--                  <img src="../favicon.ico" class="admin-avatar">-->
+                            <img th:if="${user_master.photoPath != null}"
+                                 th:src="@{/userphoto/{id}(id=${user_master.userId})}" class=" rounded-circle admin-avatar shadow-sm">
+                            <img th:unless="${user_master.photoPath != null}"
+                                 src="../Images/noprofilepic.png" class="admin-avatar rounded-circle shadow-sm">
+                            <div class="admin-info">
+                                <h2 th:text="${user_master.fullName}">Xansa It Solutions</h2>
+                                <p class="role">Welcome to Xansa IT Solutions</p>
+                            </div>
+                        </div>
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <div class="contact-item-icon">
+                                    <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="contact-label">Email</p>
+                                    <p class="contact-value" th:text="${user_master.email}">contact@xansa.net</p>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-item-icon">
+                                    <svg class="icon-sm" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="contact-label">Phone</p>
+                                    <p class="contact-value" th:text="${user_master.contactNo}">+91 8770480826</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4" >
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <!-- Thymeleaf fragment for shortcuts -->
+                                <div th:insert="~{fragments :: shortcut-student}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Quick Stats -->
+                <div class="row g-3 text-center mb-4">
+                    <div class="col-md-4 mb-2">
+                        <a href="#batch" class="card text-center text-dark text-decoration-none">
+                            <div class="emoji mb-2">🎓</div>
+                            <h5>My Total Batches</h5>
+                            <p><span class="badge bg-success"  th:text="${studentbatches.size()}"></span></p>
+<!--                            <h3 th:text="${batches.size()}"></h3>-->
+                        </a>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <a href="#assignments" class="card text-center text-dark text-decoration-none">
+                            <div class="emoji mb-2">📚</div>
+                            <h5>Assignments</h5>
+                            <p><span class="badge bg-danger" th:text="${pendingAssignments + ' Pending'}">2 Pending</span></p>
+<!--                            <h3>2 Pending</h3>-->
+                        </a>
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <a href="#attendance" class="card text-center text-dark text-decoration-none">
+                            <div class="emoji mb-2">📅</div>
+                            <h5>Average Attendance</h5>
+                            <p><span th:class="'badge ' + ${badgeClass}" th:text="${averageAttendance}">85%</span></p>
+<!--                            <h3>75%</h3>-->
+                        </a>
+                    </div>
+<!--                    <div class="col-md-3 mb-2">-->
+<!--                        <div class="card text-center text-dark">-->
+<!--                            <div class="emoji mb-2">📝</div>-->
+<!--                            <h5>Latest Result</h5>-->
+<!--                            <h3 class="text-muted">8.5 CGPA</h3>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+
+                </div>
+
+                <!-- Enrolled Batches -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-success text-white">
+                        🎓 My Batches
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <ul class="list-group">
+                                <li th:each="batch : ${batches}"
+                                    class="list-group-item d-flex justify-content-between align-items-center">
+
+                                    <!-- Batch Name & ID -->
+                                    <span th:text="${batch.name} + ' (BID - ' + ${batch.batchId} + ')'"></span>
+
+                                    <!-- Status -->
+                                    <span th:if="${batch.status} == 'ACTIVE'" class="badge bg-primary">Ongoing</span>
+                                    <span th:unless="${batch.status} == 'ACTIVE'" class="badge bg-secondary">Completed</span>
+                                </li>
+                            </ul>
+
+                            <!--                            <li class="list-group-item d-flex justify-content-between align-items-center">-->
+<!--                                Java Full Stack (Morning Batch)-->
+<!--                                <span class="badge bg-primary">Ongoing</span>-->
+<!--                            </li>-->
+<!--                            <li class="list-group-item d-flex justify-content-between align-items-center">-->
+<!--                                Python Data Science (Evening Batch)-->
+<!--                                <span class="badge bg-primary">Ongoing</span>-->
+<!--                            </li>-->
+<!--                            <li class="list-group-item d-flex justify-content-between align-items-center">-->
+<!--                                C++ Basics (Weekend Batch)-->
+<!--                                <span class="badge bg-secondary">Completed</span>-->
+<!--                            </li>-->
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Announcements -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-info text-white">
+                        📢 Coaching Announcements
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li>Holiday on <strong>2th Oct</strong> for Gandhi Jayanti.</li>
+                            <li>Guest Lecture on Cloud Computing on <strong>10th Oct</strong>.</li>
+                            <li>Mock Test scheduled on <strong>12th Oct</strong> for Python Batch.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Upcoming Deadlines -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-warning">
+                        ⏳ Upcoming Assignments & Exams
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li>Assignment 2 (Java Batch) submission: <strong>8th Oct</strong></li>
+                            <li>Python Quiz Test: <strong>9th Oct</strong></li>
+                            <li>Project Proposal (Data Science Batch): <strong>15th Oct</strong></li>
+                        </ul>
+                    </div>
+                </div>
+                <div th:insert="~{fragments :: footer}"></div>
+            </div>
+
+            <!-- Profile -->
+            <div id="profile" class="dashboard-section">
+                <h4 class="mt-3">My Profile</h4>
+                <div class="row mt-2">
+                    <div class="col-lg-8 col-md-8 mb-3">
+<!--                        <div class="col-lg-8 col-md-8 mb-3">-->
+                            <div class="card  ">
+                                <div class="card-body text-center">
+
+                                    <!-- Profile Photo Wrapper -->
+                                    <div class="position-relative d-inline-block">
+                                        <!-- Profile Image -->
+                                        <img th:if="${user_master.photoPath != null}"
+                                             th:src="@{/userphoto/{id}(id=${user_master.userId})}"
+                                             class="rounded-circle shadow-sm profileImage"
+                                             width="150" height="150">
+                                        <img th:unless="${user_master.photoPath != null}"
+                                             src="../Images/noprofilepic.png"
+                                             class="rounded-circle shadow-sm profileImage"
+                                             width="150" height="150">
+
+                                        <!-- Hidden File Input -->
+                                        <form th:action="@{/student/updatePhoto}" method="post" enctype="multipart/form-data" id="photoForm">
+                                            <input type="hidden" name="userId" th:value="${user_master.userId}" />
+                                            <input type="file" name="photo" accept="image/*" id="photoInput" class="d-none" onchange="document.getElementById('photoForm').submit();">
+                                        </form>
+
+                                        <div th:if="${profileUpdated}" class="alert alert-success alert-dismissible fade show" role="alert">
+                                            <i class="bi bi-check-circle me-2"></i>
+                                            <span th:text="${profileUpdated}"></span>
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+
+                                        <div th:if="${profileUpdatedError}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            <i class="bi bi-exclamation-triangle me-2"></i>
+                                            <span th:text="${profileUpdatedError}"></span>
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                        </div>
+
+                                        <!-- Camera Icon -->
+                                        <label for="photoInput" class="position-absolute bottom-0 end-0 bg-warning text-white rounded-circle p-2"
+                                               style="cursor:pointer; transform: translate(20%, 20%);">
+                                            <i class="bi bi-camera-fill"></i>
+                                        </label>
+                                    </div>
+
+                                    <!-- Name & Info -->
+                                    <h3 th:text="${user_master.fullName}" class="mt-3"></h3>
+                                    <p class="text-muted">STUDENT</p>
+
+                                    <div class="text-center">
+                                        <button class="btn btn-sm btn-warning"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#updateStudentModel">
+                                            <i class="bi bi-pencil-square me-1"></i>Edit
+                                        </button>
+                                    </div>
+
+                                    <hr>
+
+                                    <!-- Profile Details -->
+                                    <table class="table table-bordered text-start">
+                                        <tbody>
+                                        <tr>
+                                            <th>Email</th>
+                                            <td th:text="${user_master.email}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Username</th>
+                                            <td th:text="${user_master.username}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Contact No</th>
+                                            <td th:text="${user_master.contactNo}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Address</th>
+                                            <td>
+            <textarea th:text="${user_master.address}"
+                      style="border:none;outline:none;width:100%;" readonly></textarea>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th>Date of Birth</th>
+                                            <td th:text="${user_master.dob}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Registered On</th>
+                                            <td th:text="${user_master.createdOn}"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Status</th>
+                                            <td><span class="badge bg-success">Active</span></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        <!-- Modal -->
+                        <div class="modal fade" id="updateStudentModel" tabindex="-1" aria-labelledby="updateStudentModelLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+
+                                    <!-- Modal Header -->
+                                    <div class="modal-header bg-warning text-dark">
+                                        <h5 class="modal-title text-center" id="updateStudentModelLabel">Update Student</h5>
+                                        <button type="button" class="btn-close btn-close-dark" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+
+                                    <!-- Modal Body -->
+                                    <div class="modal-body">
+                                        <form id="updateStudentForm" class="form-div p-3" method="post"   onsubmit="return confirm('Do you want to update?');">
+
+                                            <!--                              <meta name="_csrf" th:content="${_csrf.token}" />-->
+                                            <!--                              <meta name="_csrf_header" th:content="${_csrf.headerName}" />-->
+
+                                            <input type="hidden" name="userId" id="userId" th:value="${user_master.userId}">
+
+                                            <div class="form-group mb-3">
+                                                <label for="fullName" class="form-label"><b>Full Name</b></label>
+                                                <input type="text" name="fullName" id="fullName" th:value="${user_master.fullName}"
+                                                       class="form-control" placeholder="Enter your name" required>
+                                            </div>
+
+
+                                            <div class="form-group mb-3">
+                                                <label for="address" class="form-label"><b>Address</b></label>
+                                                <textarea name="address" id="address" th:text="${user_master.address}" class="form-control" placeholder="Enter your address" required></textarea>
+                                            </div>
+
+                                            <div class="form-group mb-3">
+                                                <label for="contactNo" class="form-label" ><b>Contact Number</b></label>
+                                                <input type="number" name="contactNo" id="contactNo" th:value="${user_master.contactNo}"
+                                                       class="form-control" placeholder="Enter contact number" required>
+                                            </div>
+
+                                            <div class="form-group mb-3">
+                                                <label for="email" class="form-label"><b>Email</b></label>
+                                                <input type="email" name="email"  id="email"  class="form-control" th:value="${user_master.email}"
+                                                       placeholder="Enter email address"  required>
+                                            </div>
+
+                                            <div class="form-group mb-3">
+                                                <label for="dob" class="form-label"><b>Date of birthday</b></label>
+                                                <input type="date" name="dob"  id="dob" th:value="${#temporals.format(user_master.dob, 'yyyy-MM-dd')}"  class="form-control"
+                                                       required>
+                                            </div>
+
+                                            <div class="text-end">
+                                                <!-- Cancel Button -->
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <!-- Submit Button -->
+                                                <input type="submit" class="btn btn-warning" value="Update Profile">
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Right Section (Shortcuts) -->
+                    <div class="col-lg-4 col-md-4">
+                        <div class="card ">
+                            <div class="card-body">
+                                <!-- Thymeleaf fragment for shortcuts -->
+                                <div th:insert="~{fragments :: shortcut-student}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div th:insert="~{fragments :: footer}"></div>
+            </div>
+
+            <!-- Batch -->
+            <div id="batch" class="dashboard-section">
+                <h4 class="mt-3">My Batch</h4>
+                <div class="row mt-3">
+                    <div class="col-lg-8 col-md-8 mb-3">
+<!--                        <div class="card p-3">-->
+
+
+                            <!-- Tabs -->
+<!--                            <ul class="nav nav-tabs" id="myTab2" role="tablist">-->
+<!--                                <li class="nav-item" role="presentation">-->
+<!--                                    <button class="nav-link active" id="newuser-tab" data-bs-toggle="tab"-->
+<!--                                            data-bs-target="#addnewuser" type="button">Batches</button>-->
+<!--                                </li>-->
+<!--&lt;!&ndash;                                <li class="nav-item" role="presentation">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <button class="nav-link" id="userupdate-tab" data-bs-toggle="tab"&ndash;&gt;-->
+<!--&lt;!&ndash;                                            data-bs-target="#update_user" type="button">Update</button>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </li>&ndash;&gt;-->
+<!--&lt;!&ndash;                                <li class="nav-item" role="presentation">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <button class="nav-link" id="usernotifications-tab" data-bs-toggle="tab"&ndash;&gt;-->
+<!--&lt;!&ndash;                                            data-bs-target="#user_notifications" type="button">Notifications</button>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </li>&ndash;&gt;-->
+<!--&lt;!&ndash;                                <li class="nav-item" role="presentation">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <button class="nav-link" id="user-tab" data-bs-toggle="tab"&ndash;&gt;-->
+<!--&lt;!&ndash;                                            data-bs-target="#allusers" type="button">All Users</button>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </li>&ndash;&gt;-->
+<!--                            </ul>-->
+
+                            <!-- Tab Content -->
+<!--                            <div class="tab-content p-3">-->
+<!--                                <div class="tab-pane fade show active" id="addnewuser" role="tabpanel">-->
+<!--                                    <h4>My Batches</h4>-->
+                                    <div class="card mb-4 shadow-sm" th:each="b : ${batches}">
+
+                                        <div class="card-header bg-light d-flex justify-content-between">
+                                            <div><h4 class="card-title" th:text="${b.name}">Batch Name</h4></div>
+                                            <div>
+                                                <span class="badge bg-success" th:if="${b.status}=='ACTIVE'">Active</span>
+                                                <span class="badge rounded-pill bg-danger" th:unless="${b.status}=='ACTIVE'">Archived</span>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between">
+                                                <p class="card-text mb-1"><strong>Time:</strong> <span th:text="${#temporals.format(b.startDate,'hh:mm a')}">10:00 AM</span></p>
+                                                <p class="card-text mb-3"><strong>Mode:</strong> <span th:text="${b.mode}">Online</span></p>
+                                            </div>
+                                            <div class="d-flex justify-content-between">
+                                                <p class="card-text mb-1"><strong>Start Date:</strong> <span th:text="${#temporals.format(b.startDate,'dd-MM-yyyy')}">01-01-2025</span></p>
+                                                <p class="card-text mb-1"><strong>Faculty:</strong> <span th:text="${b.faculty.fullName}"></span></p>
+
+                                            </div>
+                                            <div class="mt-3 d-flex justify-content-end">
+                                                <!--                              <a th:href="@{'admin/batch/edit/' + ${b.batchId}}" class="btn btn-sm btn-warning"><i class="bi bi-pencil-square me-1"></i>Edit</a>-->
+                                            </div>
+                                        </div>
+                                        <!--                        </div>-->
+                                    </div>
+
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                    </div>
+                    <!-- Right Section (Shortcuts) -->
+                    <div class="col-lg-4 col-md-4">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <!-- Thymeleaf fragment for shortcuts -->
+                                <div th:insert="~{fragments :: shortcut-student}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div th:insert="~{fragments :: footer}"></div>
+            </div>
+
+            <!-- Notes -->
+            <div id="notes" class="dashboard-section">
+                <h4 class="mt-3">Study Material</h4>
+                <div class="row mt-2">
+                    <div class="col-lg-8 col-md-8 mb-3">
+<!--                        <div class="card p-3">-->
+
+                            <!-- Tabs -->
+<!--                            <ul class="nav nav-tabs" id="myTab4" role="tablist">-->
+<!--                                <li class="nav-item" role="presentation">-->
+<!--                                    <button class="nav-link active" id="batch-notes-tab" data-bs-toggle="tab"-->
+<!--                                            data-bs-target="#batch_notes" type="button">Batch Notes</button>-->
+<!--                                </li>-->
+<!--                            </ul>-->
+
+                            <!-- Tab Content -->
+<!--                            <div class="tab-content p-3">-->
+<!--                                <div class="tab-pane fade show active" id="batch_notes" role="tabpanel">-->
+<!--                                    <h5>Notes</h5>-->
+                                    <div class="mb-3">
+                                        <label for="batch_id" class="form-label">Select your batch to get notes:</label>
+                                        <select id="batch_id" name="batchId" class="form-select" required>
+                                            <option value="" selected disabled>-- Select Batch --</option>
+<!--                                            <option th:each="batch : ${studentbatches}" th:value="${batch.batchId}"-->
+                                            <option th:each="batch : ${batches}" th:value="${batch.batchId}"
+                                                    th:text="${batch.name}+' (BID -'+${batch.batchId}+')'"></option>
+                                        </select>
+                                    </div>
+
+                                    <!--    Batch Notes Content-->
+                                    <div class="mt-3" id="batchnotecontent" style="display:none;">
+                                        <div class="card-body">
+                                            <h3 class="table-heading">Notes</h3>
+                                            <div class="table-responsive">
+                                            <table class="table table-bordered table-hover mt-3">
+                                                <thead class="table-light sticky-header">
+                                                <tr>
+                                                    <th>Srno</th>
+                                                    <th>Notes PDF</th>
+                                                    <th>Upload At</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="materialTableBody">
+                                                <tr>
+                                                    <td colspan="5" class="text-center text-muted">Select a faculty to view batches</td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!---->
+<!--                        -->
+                    </div>
+                    <!-- Right Section (Shortcuts) -->
+                    <div class="col-lg-4 col-md-4">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <!-- Thymeleaf fragment for shortcuts -->
+                                <div th:insert="~{fragments :: shortcut-student}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div th:insert="~{fragments :: footer}"></div>
+            </div>
+
+            <!-- Assignments -->
+            <div id="assignments" class="dashboard-section">
+                <h4 class="mt-3">Assignments</h4>
+                <div class="row mt-3">
+                    <div class="col-lg-8 col-md-8 mb-3">
+
+                                    <div class="filter-row mb-3">
+                                        <form th:action="@{/studentAssignments/list}" method="get" style="margin:0;">
+                                            <label for="batchSelect" class="form-label">Search by batch:</label>
+                                            <select id="batchSelect" name="batchId" class="form-select" onchange="this.form.submit();">
+<!--                                                <option value="" th:selected="${selectedBatchId == null}" >All batches</option>-->
+                                                <option value="" selected disabled>--Select a batch--</option>
+                                                <option th:each="b : ${batches}"
+                                                        th:value="${b.batchId}"
+                                                        th:text="${b.name}"
+                                                        th:selected="${selectedBatchId != null} ? ${b.batchId.equals(selectedBatchId)} : false">
+                                                </option>
+                                            </select>
+                                        </form>
+                                    </div>
+
+                                    <div class="container my-4" >
+
+                                        <!-- If no assignments -->
+                                        <div th:if="${assignments.empty}" class="alert alert-info text-center">
+                                            No assignments available right now.
+                                        </div>
+
+                                        <!-- Assignments Table -->
+                                        <div th:if="${!assignments.empty}" class="table-responsive shadow-sm rounded">
+                                            <table class="table table-hover align-middle text-center">
+                                                <thead class="table-dark">
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Assignment</th>
+                                                    <th>Batch</th>
+                                                    <th>PDF</th>
+                                                    <th>Action</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr th:each="a, iter : ${assignments}">
+                                                    <td th:text="${iter.index + 1}"></td>
+                                                    <td th:text="${a.pdfName}"></td>
+                                                    <td th:text="${a.batch != null ? a.batch.name : 'N/A'}"></td>
+
+                                                    <!-- PDF Link -->
+                                                    <td>
+                                                        <a th:href="@{/studentAssignments/pdfs/{id}(id=${a.assignmentId})}"
+                                                           target="_blank"
+                                                           class="btn btn-outline-primary btn-sm">
+                                                            View PDF
+                                                        </a>
+                                                    </td>
+
+                                                    <!-- Actions -->
+                                                    <td>
+                                                        <!-- Submit Form -->
+                                                        <form th:if="${!submittedAssignmentIds.contains(a.assignmentId)}"
+                                                              th:action="@{/studentAssignments/submit}"
+                                                              method="post"
+                                                              enctype="multipart/form-data"
+                                                              class="d-flex flex-column flex-sm-row align-items-center gap-2 justify-content-center">
+                                                            <input type="hidden" name="assignmentId" th:value="${a.assignmentId}" />
+                                                            <input type="file" name="file" accept="application/pdf" class="form-control form-control-sm" required />
+                                                            <button type="submit" class="btn btn-success btn-sm">
+                                                                Submit
+                                                            </button>
+                                                        </form>
+
+                                                        <!-- Submitted -->
+                                                        <div th:if="${submittedAssignmentIds.contains(a.assignmentId)}" class="d-flex flex-wrap justify-content-center gap-2 mt-2">
+
+                                                            <!-- Delete Button -->
+                                                            <form th:if="${deletableMap[a.assignmentId]}"
+                                                                  th:action="@{/studentAssignments/delete/{id}(id=${a.assignmentId})}"
+                                                                  method="post"
+                                                                  onsubmit="return confirm('Are you sure you want to delete this submission?');">
+                                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                                    Delete
+                                                                </button>
+                                                            </form>
+
+                                                            <!-- View Submission -->
+                                                            <a th:href="@{/studentAssignments/submittedPdf/{submitId}(submitId=${submittedMap[a.assignmentId].submitId})}"
+                                                               target="_blank"
+                                                               class="btn btn-outline-secondary btn-sm">
+                                                                View Your Submission
+                                                            </a>
+
+                                                            <!-- Feedback Pending -->
+                                                            <span th:if="${!hasFeedback[a.assignmentId]}"
+                                                                  class="badge bg-warning text-dark">
+                                                                  Feedback Pending...
+                                                            </span>
+
+
+                                                            <button th:unless="${!hasFeedback[a.assignmentId]}" class="btn btn-primary btn-sm view-feedback-btn"
+                                                                    th:data-submit-id="${submittedMap[a.assignmentId].submitId}"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#assignmentfeedback">
+                                                                <i class="bi bi-pencil-square me-1"></i>View Feedback
+                                                            </button>
+                                                            <!-- Disabled Submitted Button -->
+                                                            <button th:if="${!deletableMap[a.assignmentId]}"
+                                                                    class="btn btn-secondary btn-sm" disabled>
+                                                                Submitted
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
+
+                    </div>
+                    <!-- Right Section (Shortcuts) -->
+                    <div class="col-lg-4 col-md-4">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <!-- Thymeleaf fragment for shortcuts -->
+                                <div th:insert="~{fragments :: shortcut-student}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div th:insert="~{fragments :: footer}"></div>
+            </div>
+
+            <!-- Attendance -->
+            <div id="attendance" class="dashboard-section">
+                <h4 class="mt-3">My Attendance</h4>
+                <div class="row mt-3">
+                    <div class="col-lg-8 col-md-8 mb-3">
+                <div class="card p-4 shadow-sm border-0 rounded-3">
+                    <!-- Select Batch -->
+                    <div class="row mb-3">
+                        <div class="col-md-6 mx-auto">
+                            <div class="input-group">
+                                <span class="input-group-text">Select Batch</span>
+                                <select class="form-select" id="studentBatchSelect" required>
+                                    <option value="" disabled selected>Select Batch</option>
+                                    <option th:each="batch : ${batches}"
+                                            th:value="${batch.batchId}"
+                                            th:text="${batch.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary Section -->
+                    <div id="attendanceSummary" class="mb-4 text-center" style="display:none;">
+                        <div class="card border-0 bg-light shadow-sm p-3 rounded-3">
+                            <h5 class="fw-semibold text-primary">Attendance Summary</h5>
+                            <p class="mb-1">
+                                <span class="fw-semibold">Present:</span> <span id="presentCount"></span> /
+                                <span class="fw-semibold">Total:</span> <span id="totalDays"></span>
+                            </p>
+                            <div class="progress my-2" style="height: 20px;">
+                                <div id="attendanceProgress" class="progress-bar" style="width: 0%;">0%</div>
+                            </div>
+                            <span id="attendanceRemark" class="badge rounded-pill"></span>
+                        </div>
+                    </div>
+
+                    <!-- Attendance Table -->
+                    <div id="studentAttendanceTableContainer" style="display:none;">
+                        <h5 class="text-center text-primary mb-3">Attendance Details</h5>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped text-center align-middle">
+                                <thead class="table-dark">
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                                </thead>
+                                <tbody id="studentAttendanceBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <!-- Thymeleaf fragment for shortcuts -->
+                                <div th:insert="~{fragments :: shortcut-student}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+<!--Student Attendance JS-->
+<script>
+    document.getElementById("studentBatchSelect").addEventListener("change", function() {
+        let batchId = this.value;
+        let tbody = document.getElementById("studentAttendanceBody");
+        let tableContainer = document.getElementById("studentAttendanceTableContainer");
+        let summary = document.getElementById("attendanceSummary");
+
+        tbody.innerHTML = "";
+        tableContainer.style.display = "none";
+        summary.style.display = "none";
+
+        if (!batchId) return;
+
+        fetch("/getStudentAttendance/" + batchId)
+            .then(res => res.json())
+            .then(data => {
+                // --- Attendance List ---
+                let attendanceList = data.attendanceList || [];
+                if (attendanceList.length === 0) {
+                    tbody.innerHTML = `
+                        <tr><td colspan='2' class='text-center text-muted'>No Attendance Record Found</td></tr>
+                    `;
+                } else {
+                    attendanceList.forEach(a => {
+                        let badgeClass = a.status === 'Present' ? 'badge bg-success' : 'badge bg-danger';
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${a.attendanceDate}</td>
+                                <td><span class="${badgeClass}">${a.status}</span></td>
+                            </tr>
+                        `;
+                    });
+                }
+                tableContainer.style.display = "block";
+
+                // --- Summary Section ---
+                document.getElementById("presentCount").innerText = data.presentCount;
+                document.getElementById("totalDays").innerText = data.totalDays;
+                document.getElementById("attendanceProgress").style.width = data.percentage.toFixed(2) + "%";
+                document.getElementById("attendanceProgress").innerText = data.percentage.toFixed(2) + "%";
+                document.getElementById("attendanceProgress").className = "progress-bar " + data.badgeClass;
+                document.getElementById("attendanceRemark").innerText = data.remark;
+                document.getElementById("attendanceRemark").className = "badge rounded-pill " + data.badgeClass;
+
+                summary.style.display = "block";
+            })
+            .catch(err => {
+                console.error(err);
+                tbody.innerHTML = `<tr><td colspan='2' class='text-danger text-center'>Error loading attendance</td></tr>`;
+                tableContainer.style.display = "block";
+            });
+    });
+</script>
+
+<!--Update student JS-->
+<script>
+    document.getElementById("updateStudentForm").addEventListener("submit", function(e) {
+     //console.log("Inside updateStudentForm");
+
+     const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+     const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
+
+    e.preventDefault();
+    let formData = new FormData(this);
+
+    fetch("/student/updateStudent", {
+        method: "POST",
+        headers: {
+              [csrfHeader]: csrfToken
+          },
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message); // confirmation
+        const modal = bootstrap.Modal.getInstance(document.getElementById("updateStudentModel"));
+          modal.hide();
+        this.reset(); // clear form
+        location.reload();
+    });
+  });
+
+</script>
+
+<!--Update Student Password JS-->
+<script>
+    document.getElementById("updateStudentPasswordForm").addEventListener("submit", function(e) {
+        console.log("Inside the Update Faculty Password method");
+
+     const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute("content");
+     const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute("content");
+
+
+    e.preventDefault();
+     const newPassword=document.getElementById('newPassword');
+        const confirmPassword=document.getElementById('confirmPassword');
+
+
+         // Regex for password validation
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+        // Validate password strength
+        if (!passwordRegex.test(newPassword.value)) {
+            return;
+        }
+
+
+        if(newPassword.value!=confirmPassword.value){
+            return;
+        }
+    let ans= confirm('Do you want to update password?');
+    if(!ans){
+        return
+    }
+    let formData = new FormData(this);
+    const valueSetter1=document.getElementById('invalidCurrentPassword');
+    const valueSetter2=document.getElementById('invalidCurrentPassword2');
+    fetch("/update-password", {
+        method: "POST",
+        headers: {
+              [csrfHeader]: csrfToken
+          },
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        if(data.incorrect){
+            valueSetter1.innerHTML="Current password is incorrect!";
+        }
+        else if(data.samePassword){
+            valueSetter2.innerHTML="New password cannot be the same as the old one";
+        }
+        else{
+            alert('Password updated successfully!');
+        const modal = bootstrap.Modal.getInstance(document.getElementById("updateStudentPasswordModel"));
+         modal.hide();
+         this.reset(); // clear form
+         location.reload();
+        }
+    });
+  });
+
+    function checkPasswordMatcher(){
+        const newPassword=document.getElementById('newPassword');
+        const confirmPassword=document.getElementById('confirmPassword');
+        const confirmPasswordMessage=document.getElementById('confirmPasswordMessage');
+        if(newPassword.value.length<2){
+        confirmPasswordMessage.innerHTML = "";
+            return;
+        }
+        if(newPassword.value!=confirmPassword.value){
+            confirmPasswordMessage.innerHTML = "Passwords do not match!";
+            confirmPasswordMessage.style.color= "red";
+        }else{
+            confirmPasswordMessage.innerHTML = "Matched!";
+            confirmPasswordMessage.style.color= "green";
+        }
+        confirmPasswordMessage.style.marginLeft = "10px";
+
+    }
+
+
+    document.getElementById('togglePassword1').addEventListener('click', function () {
+      const password = document.querySelector('#currentPassword');
+      const togglePasswordIcon1=document.getElementById('togglePasswordIcon1');
+      const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+      password.setAttribute('type', type);
+      togglePasswordIcon1.classList.toggle('bi-eye');
+      togglePasswordIcon1.classList.toggle('bi-eye-slash');
+    });
+    document.getElementById('togglePassword2').addEventListener('click', function () {
+      const password = document.querySelector('#newPassword');
+      const togglePasswordIcon2=document.getElementById('togglePasswordIcon2');
+      const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+      password.setAttribute('type', type);
+      togglePasswordIcon2.classList.toggle('bi-eye');
+      togglePasswordIcon2.classList.toggle('bi-eye-slash');
+    });
+    document.getElementById('togglePassword3').addEventListener('click', function () {
+      const password = document.querySelector('#confirmPassword');
+      const togglePasswordIcon3=document.getElementById('togglePasswordIcon3');
+      const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+      password.setAttribute('type', type);
+      togglePasswordIcon3.classList.toggle('bi-eye');
+      togglePasswordIcon3.classList.toggle('bi-eye-slash');
+    });
+
+     document.getElementById('newPassword').addEventListener('keyup', function () {
+        const password = document.getElementById('newPassword');
+        const errorElement = document.getElementById('newPasswordError');
+        errorElement.innerHTML = "";
+        // Validation rules
+        const rules = [
+            {
+                regex: /.{8,}/,
+                message: "Password must be at least 8 characters long.",
+            },
+            {
+                regex: /[A-Z]/,
+                message: "Password must contain at least one uppercase letter.",
+            },
+            {
+                regex: /[a-z]/,
+                message: "Password must contain at least one lowercase letter.",
+            },
+            {
+                regex: /\d/,
+                message: "Password must contain at least one number.",
+            },
+            {
+                regex: /[@$!%*?&]/,
+                message: "Password must contain at least one special character (@, $, !, %, *, ?, &).",
+            },
+        ];
+
+        rules.forEach((rule) => {
+            const li = document.createElement("li");
+            li.textContent = rule.message;
+            if (!rule.regex.test(password.value)) {
+                li.style.color = "red";
+            } else {
+                li.style.color = "green";
+            }
+            errorElement.appendChild(li);
+        });
+    });
+
+</script>
+<!--Update profile alert js-->
+<script>
+    setTimeout(() => {
+      document.querySelectorAll('.alert').forEach(alert => {
+        const bsAlert = new bootstrap.Alert(alert);
+        bsAlert.close();
+      });
+    }, 6000); // hide after 6 seconds
+</script>
+
+<!-- Custom JS for section navigation -->
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+ // ✅ Select only dashboard sections (exclude modals)
+ const navLinks = document.querySelectorAll('#sidebarMenu .nav-link');
+ const sections = document.querySelectorAll('#dashboardContent .dashboard-section');
+ const sidebar = document.getElementById('sidebarMenu'); // added for mobile collapse
+
+ // ✅ Function to activate a section and optionally a tab within it
+ function activateSection(sectionId, tabId = null) {
+   // If any Bootstrap modal is open, do nothing
+   if (document.querySelector('.modal.show')) return;
+
+   // Remove active from all main links and sections
+   navLinks.forEach(link => link.classList.remove('active'));
+   sections.forEach(section => {
+     section.classList.remove('active');
+     section.classList.remove('show');
+   });
+
+   // Activate target section
+   const targetLink = document.querySelector(`#sidebarMenu .nav-link[href='#${sectionId}']`);
+   const targetSection = document.getElementById(sectionId);
+
+   if (targetLink && targetSection) {
+     targetLink.classList.add('active');
+     targetSection.classList.add('active');
+     targetSection.classList.add('show');
+
+     // Handle tab activation if tabId provided
+     if (tabId) {
+       const tabButton = targetSection.querySelector(`button[data-bs-target='#${tabId}']`);
+       const tabPane = targetSection.querySelector(`#${tabId}`);
+
+       if (tabButton && tabPane) {
+         const allTabButtons = targetSection.querySelectorAll('[data-bs-toggle="tab"]');
+         const allTabPanes = targetSection.querySelectorAll('.tab-pane');
+
+         allTabButtons.forEach(btn => btn.classList.remove('active'));
+         allTabPanes.forEach(pane => {
+           pane.classList.remove('active');
+           pane.classList.remove('show');
+         });
+
+         tabButton.classList.add('active');
+         tabPane.classList.add('active');
+         tabPane.classList.add('show');
+       }
+     }
+   }
+ }
+
+ // ✅ Sidebar link click handling
+ navLinks.forEach(link => {
+   link.addEventListener('click', function (e) {
+     e.preventDefault();
+
+     // Skip if a modal is open
+     if (document.querySelector('.modal.show')) return;
+
+     const sectionId = this.getAttribute('href').substring(1);
+     activateSection(sectionId);
+
+     // ✅ Collapse sidebar on mobile screens (added)
+     if (window.innerWidth < 992 && sidebar) {
+       const collapseInstance = bootstrap.Collapse.getInstance(sidebar) || new bootstrap.Collapse(sidebar);
+       if (sidebar.classList.contains('show')) {
+         collapseInstance.hide();
+       }
+     }
+
+     // ✅ Update the URL hash
+     history.replaceState(null, null, `#${sectionId}`);
+   });
+ });
+
+ // ✅ Tab click handling inside sections
+ document.addEventListener('click', function (e) {
+   if (e.target.matches('[data-bs-toggle="tab"]')) {
+     const tabId = e.target.getAttribute('data-bs-target').substring(1);
+     const currentSection = e.target.closest('.dashboard-section');
+
+     if (currentSection) {
+       const sectionId = currentSection.id;
+       history.replaceState(null, null, `#${sectionId}#${tabId}`);
+     }
+   }
+ });
+
+ // ✅ Parse URL hash for navigation
+ function parseAndActivateHash() {
+   // Do not change anything if modal is open
+   if (document.querySelector('.modal.show')) return;
+
+   const hash = window.location.hash.substring(1); // Remove #
+   if (hash) {
+     const parts = hash.split('#');
+     const sectionId = parts[0];
+     const tabId = parts[1] || null;
+     activateSection(sectionId, tabId);
+   } else {
+     activateSection('home');
+   }
+ }
+
+ // Initial load
+ parseAndActivateHash();
+
+ // Handle browser back/forward
+ window.addEventListener('hashchange', parseAndActivateHash);
+});
+
+
+
+   /*
+   document.addEventListener('DOMContentLoaded', function () {
+       const navLinks = document.querySelectorAll('#sidebarMenu .nav-link');
+       const sections = document.querySelectorAll('.dashboard-section');
+       const sidebar = document.getElementById('sidebarMenu');
+
+       // Function to activate a section
+       function activateSection(targetId) {
+           // Remove active from all links and sections
+           navLinks.forEach(l => l.classList.remove('active'));
+           sections.forEach(section => section.classList.remove('active'));
+
+           // Find the target link and section
+           const targetLink = document.querySelector(`#sidebarMenu .nav-link[href='#${targetId}']`);
+           const targetSection = document.getElementById(targetId);
+
+           if (targetLink && targetSection) {
+               targetLink.classList.add('active');
+               targetSection.classList.add('active');
+           }
+       }
+
+       // Handle sidebar clicks
+       navLinks.forEach(link => {
+           link.addEventListener('click', function (e) {
+               e.preventDefault(); // Prevent default scroll
+               const targetId = this.getAttribute('href').substring(1);
+               activateSection(targetId);
+
+               // Collapse sidebar on small screens
+               if (window.innerWidth < 992 && sidebar) {
+                   const collapseInstance = bootstrap.Collapse.getInstance(sidebar) || new bootstrap.Collapse(sidebar);
+                   if (sidebar.classList.contains('show')) {
+                       collapseInstance.hide();
+                   }
+               }
+
+               // Update the URL hash (so refresh/redirect keeps state)
+               history.replaceState(null, null, `#${targetId}`);
+           });
+       });
+
+       // Activate section based on current URL hash
+       const currentHash = window.location.hash;
+       if (currentHash) {
+           const targetId = currentHash.substring(1);
+           activateSection(targetId);
+       } else {
+           // Default section (home)
+           activateSection('home');
+       }
+   });
+*/
+   /*
+       document.addEventListener('DOMContentLoaded', function () {
+               const navLinks = document.querySelectorAll('#sidebarMenu .nav-link');
+               const sections = document.querySelectorAll('.dashboard-section');
+               const sidebar = document.getElementById('sidebarMenu');
+
+               navLinks.forEach(link => {
+                   link.addEventListener('click', function (e) {
+                       e.preventDefault(); // Prevent page jump
+
+                       // Remove active from all links and sections
+                       navLinks.forEach(l => l.classList.remove('active'));
+                       sections.forEach(section => section.classList.remove('active'));
+
+                       // Add active to clicked link
+                       this.classList.add('active');
+
+                       // Show the corresponding section
+                       const targetId = this.getAttribute('href').substring(1);
+                       const targetSection = document.getElementById(targetId);
+                       if (targetSection) {
+                           targetSection.classList.add('active');
+                       }
+
+                       // Collapse sidebar if on small screens
+                       if (window.innerWidth < 992 && sidebar) {
+                           const collapseInstance = bootstrap.Collapse.getOrCreateInstance(sidebar);
+                           collapseInstance.hide();
+                       }
+                   });
+               });
+           });
+   */
+</script>
+
+<!--For Assignment according to student batches-->
+<script>
+  /*  document.getElementById("batchId").addEventListener("change", function() {
+        var batchId = this.value;
+        console.log("Batch id " + batchId);
+        document.getElementById("assignmentcontent").style.display = "block";
+
+        if(batchId) {
+            fetch('/allassignmetbybatchid/' + batchId)
+                .then(response => response.json())
+                .then(data => {
+                    let tbody = document.getElementById("assignmenttable");
+                    tbody.innerHTML = "";
+
+                    if (data.length === 0) {
+                        tbody.innerHTML = "<tr><td colspan='4' class='text-center text-muted'>No Assignment found</td></tr>";
+                        return;
+                    }
+
+                    data.forEach((assignment, index) => {
+                        let row = `
+                            <tr>
+                              <td>${index + 1}</td>
+                              <td>${assignment.title}</td>
+                              <td>
+                                  <a href="/studentAssignments/pdfs/${assignment.assignmentId}"
+                                     target="_blank" class="btn btn-outline-success btn-sm">View</a>
+                              </td>
+                              <td>
+                                  <button class="btn btn-primary btn-sm">Action</button>
+                              </td>
+                            </tr>
+                        `;
+                        tbody.innerHTML += row;
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    }); */
+</script>
+
+<!--For Batch Notes-->
+<script>
+    document.getElementById("batch_id").addEventListener("change", function() {
+      let batch_id = this.value;
+      let tableBody = document.getElementById("materialTableBody");
+      document.getElementById("batchnotecontent").style.display="block";
+    console.log("Batch Id is "+batch_id);
+      tableBody.innerHTML = "";
+
+      if (!batch_id) {
+          tableBody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">Select a course to view study material</td></tr>`;
+          return;
+      }
+
+      fetch("/course/material/batch/"+batch_id) // Spring Boot endpoint returning JSON
+          .then(response => response.json())
+          .then(pdfs => {
+              tableBody.innerHTML = "";
+
+              if (pdfs.length === 0) {
+                  tableBody.innerHTML = `<tr><td colspan="5" class="text-center text-danger">No study material found</td></tr>`;
+                  return;
+              }
+              let count=1;
+              pdfs.forEach(pdf => {
+                  let row = `
+                      <tr>
+                          <td>${count++}</td>
+                          <td>${pdf.documentName}</td>
+                          <td>${pdf.uploadedAt}</td>
+                          <td>
+                          <a href="/course/pdf/view/${pdf.pdfId}" class="btn btn-sm btn-outline-success mb-3 mb-lg-0 mb-sm-0">View</a>
+                          <a href="/notes/download/${pdf.pdfId}" class="btn btn-primary btn-sm" >Download</a>
+                          </td>
+                      </tr>
+                  `;
+                  tableBody.innerHTML += row;
+              });
+          })
+          .catch(error => {
+              console.error("Error fetching batches:", error);
+              tableBody.innerHTML = `<tr><td colspan="5" class="text-center text-danger">Error loading batches</td></tr>`;
+          });
+  });
+
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const feedbackModal = document.getElementById("assignmentfeedback");
+        const feedbackContent = document.getElementById("feedbackContent");
+
+        feedbackModal.addEventListener("show.bs.modal", async (event) => {
+            const button = event.relatedTarget;
+            const submitId = button.getAttribute("data-submit-id");
+
+            feedbackContent.innerHTML = `<p class="text-center text-secondary">Loading feedback...</p>`;
+
+            try {
+                const response = await fetch(`/studentAssignments/feedback/${submitId}`);
+                const data = await response.json();
+
+                if (data.status === "error") {
+                    feedbackContent.innerHTML = `<div class="alert alert-danger">${data.message}</div>`;
+                    return;
+                }
+                if (data.status === "pending") {
+                    feedbackContent.innerHTML = `<div class="alert alert-warning">${data.summary}</div>`;
+                    return;
+                }
+
+                let issuesHtml = "";
+                if (data.issues && data.issues.length > 0) {
+                    issuesHtml = `<ul>${data.issues.map(i => `<li>${i}</li>`).join('')}</ul>`;
+                }
+
+                let suggestionsHtml = "";
+                if (data.suggestions && data.suggestions.length > 0) {
+                    suggestionsHtml = `<ul>${data.suggestions.map(s => `<li>${s}</li>`).join('')}</ul>`;
+                }
+
+                feedbackContent.innerHTML = `
+                    <div class="mb-3">
+                        <h5><strong>Assignment:</strong> ${data.assignmentName}</h5>
+                        <p><strong>Batch:</strong> ${data.batchName}</p>
+                        <p><strong>Submitted At:</strong> ${new Date(data.submittedAt).toLocaleString()}</p>
+                    </div>
+                    <hr>
+                    <h6><strong>Summary:</strong></h6>
+                    <p>${data.summary}</p>
+                    <h6><strong>Verdict:</strong> ${data.verdict}</h6>
+                    <h6><strong>Grade:</strong> ${data.grade}/100</h6>
+                    <h6><strong>Issues:</strong></h6>${issuesHtml}
+                    <h6><strong>Suggestions:</strong></h6>${suggestionsHtml}
+                `;
+            } catch (err) {
+                feedbackContent.innerHTML = `<div class="alert alert-danger">Error fetching feedback. Please try again.</div>`;
+                console.error(err);
+            }
+        });
+    });
+</script>
+
+
+
+</body>
+
+</html>
