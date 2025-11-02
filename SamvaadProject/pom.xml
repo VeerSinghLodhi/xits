@@ -48,6 +48,10 @@
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
+<dependency>
+  <groupId>com.sendgrid</groupId>
+  <artifactId>sendgrid-java</artifactId>
+</dependency>
 
 
 		<dependency>
