@@ -85,7 +85,7 @@ public class AdmissionController {
             payment.setPaymentMode(paymentMode);
             feeRepository.save(payment);
 
-            emailService.getSendInvoice(newAdmission.getAdmissionId());
+          //  emailService.getSendInvoice(newAdmission.getAdmissionId());
 
         }
         redirectAttributes.addAttribute("newAdmissionAdded",true);
