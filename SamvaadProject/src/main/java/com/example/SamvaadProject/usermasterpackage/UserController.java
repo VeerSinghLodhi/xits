@@ -513,7 +513,7 @@ public class UserController {
             userRepository.save(newUser);
             System.out.println("After Registration");
             redirectAttributes.addAttribute("newUserAdded",true);
-            emailService.getSendUsernameAndPassword(newUser.getFullName(),newUser.getUsername(),"Xits@143",newUser.getEmail());
+          //    emailService.getSendUsernameAndPassword(newUser.getFullName(),newUser.getUsername(),"Xits@143",newUser.getEmail());
             return "redirect:/admin/dashboard#student";
 
         }catch(Exception e){
