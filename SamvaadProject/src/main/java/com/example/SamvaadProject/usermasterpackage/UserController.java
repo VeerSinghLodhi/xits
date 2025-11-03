@@ -729,7 +729,7 @@ public ResponseEntity<byte[]> getResume(@PathVariable("pdfId")Long pdfId) {
 
         if(master!=null){
             String otp = otpService.generateOtp(master.getEmail());
-            emailService.sendOtpEmail(master.getEmail(), otp);
+          //   emailService.sendOtpEmail(master.getEmail(), otp);
             response.replace("otpSent",false,true);
         }else{
             response.replace("usernameNotFound",false,true);
