@@ -73,7 +73,7 @@ public class FeePaymentController {
         feePaymentRepository.save(feePayment);
 
 
-       emailService.getSendInvoice(admission.getAdmissionId());
+      // emailService.getSendInvoice(admission.getAdmissionId());
 
         redirectAttributes.addAttribute("feeSubmitted",true);
 
