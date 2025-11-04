@@ -528,7 +528,7 @@ public class UserController {
     uName = uName.toLowerCase().replaceAll("\\s+", "");
     String namePart = uName.length() >= 4 ? uName.substring(0, 4) : uName;
 
-    int count = userRepository.getMaxCount() + 1;   // next user count
+    Long count = userRepository.getMaxCount() + 1;   // next user count
     String countPart = String.format("%02d", count); // ensures 01, 02, 03 ... 10, 11, etc.
 
     return namePart + countPart + dob.getYear();
