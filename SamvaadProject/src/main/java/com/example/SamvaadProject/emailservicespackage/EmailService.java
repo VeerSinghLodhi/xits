@@ -482,13 +482,102 @@ public class EmailService {
             String logoUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg0GupVn_X0cW7eVWzGcnkhdmkA5l3QN1wUaWEX3Bj_cU-33UQjI1jJlHVKLkRTsd9zQVWG2rlzHrP7PyWxXkBoQmGcfeM8yBRhaI935Kupo-5Sfy1cSjpCPXUEffEvLRb4_Jf6v6Adu4w1l7QPBuP66hFl_Ei2NaE1AENV69mU-Jv6D02K-JG3hEaYNHKl/s1650/xansaitsulutionsLogo.png";
             String appName = "Xansa IT Solutions";
 
-            String htmlContent = """
-                <!DOCTYPE html>
-                <html lang="en">
-                <head><meta charset="UTF-8"></head>
-                <body>... your existing OTP HTML ...</body>
-                </html>
-            """.formatted(logoUrl, appName, appName, otp, LocalDate.now().getYear(), appName);
+           String htmlContent = """
+                        <!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <meta charset="UTF-8">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        </head>
+                        <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f7fa;">
+                            <table role="presentation" width="100%%" cellspacing="0" cellpadding="0" border="0" style="background-color: #f5f7fa;">
+                                <tr>
+                                    <td align="center" style="padding: 40px 20px;">
+                                        <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07); max-width: 600px; width: 100%%;">
+                    
+                                            <!-- Header with Logo -->
+                                            <tr>
+                                                <td align="center" style="padding: 40px 40px 30px;">
+                                                    <img src="%s" alt="%s" style="width: 140px; height: auto; display: block; margin-bottom: 16px;">
+                                                    <h1 style="margin: 0; font-size: 24px; font-weight: 600; color: #1a202c;">%s</h1>
+                                                </td>
+                                            </tr>
+                    
+                                            <!-- Divider -->
+                                            <tr>
+                                                <td style="padding: 0 40px;">
+                                                    <div style="height: 1px; background: linear-gradient(to right, transparent, #e2e8f0, transparent);"></div>
+                                                </td>
+                                            </tr>
+                    
+                                            <!-- Main Content -->
+                                            <tr>
+                                                <td style="padding: 40px 40px 30px;">
+                                                    <h2 style="margin: 0 0 20px; font-size: 20px; font-weight: 600; color: #2d3748;">Password Update Verification</h2>
+                                                    <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.6; color: #4a5568;">
+                                                        We received a request to update your password. To proceed securely, please use the verification code below:
+                                                    </p>
+                    
+                                                    <!-- OTP Box -->
+                                                    <table role="presentation" width="100%%" cellspacing="0" cellpadding="0" border="0">
+                                                        <tr>
+                                                            <td align="center" style="padding: 24px 0;">
+                                                                <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="background: #FFC451; border-radius: 8px;">
+                                                                    <tr>
+                                                                        <td style="padding: 20px 40px;">
+                                                                            <div style="font-size: 36px; font-weight: 700; letter-spacing: 8px; color: #000; font-family: 'Courier New', monospace;">%s</div>
+                                                                        </td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                    
+                                                    <!-- Info Box -->
+                                                    <table role="presentation" width="100%%" cellspacing="0" cellpadding="0" border="0" style="background-color: #edf2f7; border-radius: 8px; margin: 24px 0;">
+                                                        <tr>
+                                                            <td style="padding: 16px 20px;">
+                                                                <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #2d3748;">
+                                                                    <strong style="color: #1a202c;">⏱️ Valid for 5 minutes</strong><br>
+                                                                    For your security, never share this code with anyone, including our support team.
+                                                                </p>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                    
+                                                    <p style="margin: 24px 0 0; font-size: 14px; line-height: 1.6; color: #718096;">
+                                                        If you didn't request this password change, please ignore this email or contact our support team if you have concerns about your account security.
+                                                    </p>
+                                                </td>
+                                            </tr>
+                    
+                                            <!-- Footer -->
+                                            <tr>
+                                                <td style="padding: 0 40px 40px;">
+                                                    <div style="height: 1px; background: linear-gradient(to right, transparent, #e2e8f0, transparent); margin-bottom: 24px;"></div>
+                                                    <table role="presentation" width="100%%" cellspacing="0" cellpadding="0" border="0">
+                                                        <tr>
+                                                            <td align="center">
+                                                                <p style="margin: 0 0 8px; font-size: 13px; color: #a0aec0;">
+                                                                    © %s %s. All rights reserved.
+                                                                </p>
+                                                                <p style="margin: 0; font-size: 12px; color: #cbd5e0;">
+                                                                    Secure Account Management System
+                                                                </p>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                    
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                        </body>
+                        </html>
+                        """.formatted(logoUrl, appName, appName, otp, LocalDate.now().getYear(), appName);
+
 
             sendHtmlEmail(toEmail, "🔒 OTP Verification - Secure Password Update", htmlContent);
         } catch (Exception e) {
