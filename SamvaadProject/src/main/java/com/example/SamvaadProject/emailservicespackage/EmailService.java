@@ -1,6 +1,6 @@
 package com.example.SamvaadProject.emailservicespackage;
 
-
+/*
 import com.example.SamvaadProject.admissionpackage.AdmissionMaster;
 import com.example.SamvaadProject.admissionpackage.AdmissionRepository;
 import com.example.SamvaadProject.feespackage.FeeRepository;
@@ -335,3 +335,261 @@ public class EmailService {
     }
 
 }
+*/
+
+// SendGrid Mail
+import com.example.SamvaadProject.admissionpackage.AdmissionMaster;
+import com.example.SamvaadProject.admissionpackage.AdmissionRepository;
+import com.example.SamvaadProject.feespackage.FeeRepository;
+import com.example.SamvaadProject.pdfgeneratorpackage.FeePaymentDTO;
+import com.example.SamvaadProject.pdfgeneratorpackage.InvoiceDTO;
+import com.example.SamvaadProject.pdfgeneratorpackage.PdfService;
+import com.sendgrid.*;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Attachments;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Service
+public class EmailService {
+
+    @Value("${SENDGRID_API_KEY}")
+    private String sendGridApiKey;
+
+    @Value("${SENDGRID_SENDER_EMAIL}")
+    private String fromEmail;
+
+    @Autowired
+    AdmissionRepository admissionRepository;
+
+    @Autowired
+    FeeRepository feeRepository;
+
+    @Autowired
+    PdfService pdfService;
+
+    // ======================= 1. Send Username & Password =======================
+    public void getSendUsernameAndPassword(String fullName, String username, String password, String to) {
+        try {
+            String logoUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg0GupVn_X0cW7eVWzGcnkhdmkA5l3QN1wUaWEX3Bj_cU-33UQjI1jJlHVKLkRTsd9zQVWG2rlzHrP7PyWxXkBoQmGcfeM8yBRhaI935Kupo-5Sfy1cSjpCPXUEffEvLRb4_Jf6v6Adu4w1l7QPBuP66hFl_Ei2NaE1AENV69mU-Jv6D02K-JG3hEaYNHKl/s1650/xansaitsulutionsLogo.png";
+            String companyName = "Xansa IT Solutions";
+
+            String htmlBody = "<!DOCTYPE html>" +
+                    "<html lang='en'>" +
+                    "<head>" +
+                    "  <meta charset='UTF-8'>" +
+                    "  <meta name='viewport' content='width=device-width, initial-scale=1.0'>" +
+                    "  <title>Login Credentials - " + companyName + "</title>" +
+                    "  <style>" +
+                    "    * { margin: 0; padding: 0; box-sizing: border-box; }" +
+                    "    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;" +
+                    "           background-color: #f5f7fa; margin: 0; padding: 40px 20px; }" +
+                    "    .email-wrapper { max-width: 600px; margin: 0 auto; background-color: #ffffff;" +
+                    "                     border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.07); overflow: hidden; }" +
+                    "    .logo-section { text-align: center; padding: 40px 40px 20px; background-color: #ffffff; }" +
+                    "    .logo-section img { width: 140px; height: auto; margin-bottom: 16px; }" +
+                    "    .logo-section h1 { font-size: 24px; font-weight: 600; color: #1a202c; margin-bottom: 8px; }" +
+                    "    .divider { height: 1px; background: linear-gradient(to right, transparent, #e2e8f0, transparent);" +
+                    "               margin: 0 40px; }" +
+                    "    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);" +
+                    "              color: #ffffff; padding: 30px 40px; text-align: center; }" +
+                    "    .header h2 { font-size: 22px; font-weight: 600; margin: 0; }" +
+                    "    .content { padding: 40px 40px 30px; }" +
+                    "    .content > p { font-size: 16px; color: #4a5568; line-height: 1.6; margin-bottom: 24px; text-align: center; }" +
+                    "    .credentials-box { background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);" +
+                    "                       border: 2px solid #e2e8f0; border-radius: 10px; padding: 30px; margin: 24px 0; }" +
+                    "    .credential-item { margin: 20px 0; padding: 16px; background-color: #ffffff;" +
+                    "                       border-radius: 8px; border-left: 4px solid #667eea; }" +
+                    "    .credential-label { font-size: 13px; font-weight: 600; color: #718096;" +
+                    "                        text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }" +
+                    "    .credential-value { font-size: 20px; font-weight: 700; color: #2d3748;" +
+                    "                        font-family: 'Courier New', monospace; letter-spacing: 1px; word-break: break-all; }" +
+                    "    .warning-box { background-color: #fef5e7; border: 1px solid #f9e79f; border-radius: 8px;" +
+                    "                   padding: 16px 20px; margin: 24px 0; }" +
+                    "    .warning-box p { font-size: 14px; color: #856404; line-height: 1.5; margin: 0; }" +
+                    "    .security-tips { background-color: #e8f4f8; border-radius: 8px; padding: 20px; margin: 24px 0; }" +
+                    "    .security-tips h3 { font-size: 15px; color: #1a202c; margin-bottom: 12px; font-weight: 600; }" +
+                    "    .security-tips ul { margin: 0; padding-left: 20px; }" +
+                    "    .security-tips li { font-size: 13px; color: #4a5568; line-height: 1.6; margin: 6px 0; }" +
+                    "    .footer { background-color: #f7fafc; padding: 30px 40px; text-align: center; border-top: 1px solid #e2e8f0; }" +
+                    "    .footer p { font-size: 13px; color: #a0aec0; margin: 4px 0; line-height: 1.5; }" +
+                    "    .footer-note { font-size: 12px; color: #cbd5e0; margin-top: 12px; }" +
+                    "  </style>" +
+                    "</head>" +
+                    "<body>" +
+                    "  <div class='email-wrapper'>" +
+                    "    <div class='logo-section'>" +
+                    "      <img src='" + logoUrl + "' alt='" + companyName + " Logo'>" +
+                    "      <h1>" + companyName + "</h1>" +
+                    "    </div>" +
+                    "    <div class='divider'></div>" +
+                    "    <div class='header'>" +
+                    "      <h2>🔐 Your Account Credentials</h2>" +
+                    "    </div>" +
+                    "    <div class='content'>" +
+                    "      <p>Welcome! Your account has been successfully created. Below are your login credentials:</p>" +
+                    "      <div class='credentials-box'>" +
+                    "        <div class='credential-item'>" +
+                    "          <div class='credential-label'>Username</div>" +
+                    "          <div class='credential-value'>" + username + "</div>" +
+                    "        </div>" +
+                    "        <div class='credential-item'>" +
+                    "          <div class='credential-label'>Password</div>" +
+                    "          <div class='credential-value'>" + password + "</div>" +
+                    "        </div>" +
+                    "      </div>" +
+                    "      <div class='warning-box'>" +
+                    "        <p><strong>⚠️ Important:</strong> For your security, please change your password after your first login.</p>" +
+                    "      </div>" +
+                    "      <div class='security-tips'>" +
+                    "        <h3>🛡️ Security Best Practices</h3>" +
+                    "        <ul>" +
+                    "          <li>Never share your credentials with anyone</li>" +
+                    "          <li>Use a strong, unique password for your account</li>" +
+                    "          <li>Keep this email secure or delete it after saving your credentials</li>" +
+                    "        </ul>" +
+                    "      </div>" +
+                    "    </div>" +
+                    "    <div class='footer'>" +
+                    "      <p>© "+ LocalDate.now().getYear() + " " + companyName + ". All rights reserved.</p>" +
+                    "      <p>Secure Account Management System</p>" +
+                    "      <p class='footer-note'>This is an automated message. Please do not reply to this email.</p>" +
+                    "    </div>" +
+                    "  </div>" +
+                    "</body>" +
+                    "</html>";
+
+            sendHtmlEmail(to, "Welcome " + fullName, htmlBody);
+        } catch (Exception e) {
+            System.out.println("Error is " + e);
+        }
+    }
+
+    // ======================= 2. Send OTP Email =======================
+    public void sendOtpEmail(String toEmail, String otp) {
+        try {
+            String logoUrl = "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg0GupVn_X0cW7eVWzGcnkhdmkA5l3QN1wUaWEX3Bj_cU-33UQjI1jJlHVKLkRTsd9zQVWG2rlzHrP7PyWxXkBoQmGcfeM8yBRhaI935Kupo-5Sfy1cSjpCPXUEffEvLRb4_Jf6v6Adu4w1l7QPBuP66hFl_Ei2NaE1AENV69mU-Jv6D02K-JG3hEaYNHKl/s1650/xansaitsulutionsLogo.png";
+            String appName = "Xansa IT Solutions";
+
+            String htmlContent = """
+                <!DOCTYPE html>
+                <html lang="en">
+                <head><meta charset="UTF-8"></head>
+                <body>... your existing OTP HTML ...</body>
+                </html>
+            """.formatted(logoUrl, appName, appName, otp, LocalDate.now().getYear(), appName);
+
+            sendHtmlEmail(toEmail, "🔒 OTP Verification - Secure Password Update", htmlContent);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to send OTP email", e);
+        }
+    }
+
+    // ======================= 3. Send Invoice with PDF =======================
+    public void getSendInvoice(String admissionId) {
+        try {
+            InvoiceDTO invoiceDTO = new InvoiceDTO();
+            AdmissionMaster admissionMaster = admissionRepository.findById(admissionId).orElse(null);
+
+            invoiceDTO.setStudentName(admissionMaster.getUserMaster().getFullName());
+            invoiceDTO.setAdmissionId(admissionMaster.getAdmissionId());
+            invoiceDTO.setCourseName(admissionMaster.getCourse().getCourseName());
+            invoiceDTO.setFeeCategory(admissionMaster.getFeeCategory());
+            invoiceDTO.setCourseFee(admissionMaster.getCourseFee().toString());
+            invoiceDTO.setDiscount(admissionMaster.getDiscount().toString());
+            invoiceDTO.setNetPayableAmount(admissionMaster.getNetFees().toString());
+
+            if (!admissionMaster.getFeeCategory().equals("Lumpsum")) {
+                invoiceDTO.setRegistrationFee(admissionMaster.getRegistrationFee().toString());
+                invoiceDTO.setTotalInstallments(admissionMaster.getNoOfInstallments().toString());
+
+                List<FeePaymentDTO> feePaymentDTOS = feeRepository.findByAdmission_AdmissionId(admissionMaster.getAdmissionId())
+                        .stream()
+                        .map(feePayment -> new FeePaymentDTO(
+                                feePayment.getInstallmentNo().toString(),
+                                feePayment.getAmount().toString(),
+                                feePayment.getPaymentMode(),
+                                feePayment.getPaymentDate().toString(),
+                                feePayment.getBalanceAfterPayment().toString()))
+                        .toList();
+
+                invoiceDTO.setPendingBalance(feePaymentDTOS.get(feePaymentDTOS.size() - 1).getPendingAmount());
+                invoiceDTO.setAllInstallments(feePaymentDTOS);
+            }
+
+            Map<String, Object> data = new HashMap<>();
+            data.put("invoice", invoiceDTO);
+
+            byte[] pdfBytes = pdfService.generatePdf("invoice", data);
+
+            String htmlBody = "Dear Student,<br><br>Thank you for your payment.<br>Please find your invoice attached.<br><br>Regards,<br>Xansa IT Solutions";
+            sendEmailWithAttachment(admissionMaster.getUserMaster().getEmail(),
+                    "Your Fee Payment Invoice", htmlBody, pdfBytes);
+        } catch (Exception e) {
+            System.out.println("Error is " + e);
+        }
+    }
+
+    // ======================= Helper: Send HTML Email =======================
+    private void sendHtmlEmail(String to, String subject, String htmlBody) throws IOException {
+        Email from = new Email(fromEmail);
+        Email toEmail = new Email(to);
+        Content content = new Content("text/html", htmlBody);
+        Mail mail = new Mail(from, subject, toEmail, content);
+
+        SendGrid sg = new SendGrid(sendGridApiKey);
+        Request request = new Request();
+
+        try {
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(mail.build());
+            sg.api(request);
+            System.out.println("Email sent successfully to " + to);
+        } catch (IOException e) {
+            System.out.println("Error sending email: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    // ======================= Helper: Send Email with PDF =======================
+    private void sendEmailWithAttachment(String to, String subject, String htmlBody, byte[] pdfBytes) throws IOException {
+        Email from = new Email(fromEmail);
+        Email toEmail = new Email(to);
+        Content content = new Content("text/html", htmlBody);
+        Mail mail = new Mail(from, subject, toEmail, content);
+
+        Attachments attachment = new Attachments();
+        attachment.setContent(Base64.getEncoder().encodeToString(pdfBytes));
+        attachment.setType("application/pdf");
+        attachment.setFilename("FeeInvoice.pdf");
+        attachment.setDisposition("attachment");
+        mail.addAttachments(attachment);
+
+        SendGrid sg = new SendGrid(sendGridApiKey);
+        Request request = new Request();
+
+        try {
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(mail.build());
+            sg.api(request);
+            System.out.println("Email sent successfully with invoice attachment to " + to);
+        } catch (IOException e) {
+            System.out.println("Error sending email with attachment: " + e.getMessage());
+            throw e;
+        }
+    }
+}
+
