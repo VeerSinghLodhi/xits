@@ -513,7 +513,7 @@ public class UserController {
             userRepository.save(newUser);
             System.out.println("After Registration");
             redirectAttributes.addAttribute("newUserAdded",true);
-          //    emailService.getSendUsernameAndPassword(newUser.getFullName(),newUser.getUsername(),"Xits@143",newUser.getEmail());
+              emailService.getSendUsernameAndPassword(newUser.getFullName(),newUser.getUsername(),"Xits@143",newUser.getEmail());
             return "redirect:/admin/dashboard#student";
 
         }catch(Exception e){
@@ -729,7 +729,7 @@ public ResponseEntity<byte[]> getResume(@PathVariable("pdfId")Long pdfId) {
 
         if(master!=null){
             String otp = otpService.generateOtp(master.getEmail());
-          //   emailService.sendOtpEmail(master.getEmail(), otp);
+             emailService.sendOtpEmail(master.getEmail(), otp);
             response.replace("otpSent",false,true);
         }else{
             response.replace("usernameNotFound",false,true);
