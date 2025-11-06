@@ -82,6 +82,11 @@ public class UserController {
         return "login";
     }
 
+     @GetMapping("/")
+    public String showLoginPage() {
+        return "redirect:/login";
+    }
+
 
     @GetMapping("/admin/dashboard")
     public String getAdminDashboard(HttpSession session,
