@@ -83,7 +83,7 @@ public class UserController {
     }
 
      @GetMapping("/")
-    public String showLoginPage() {
+    public String showLoginPage1() {
         return "redirect:/login";
     }
 
