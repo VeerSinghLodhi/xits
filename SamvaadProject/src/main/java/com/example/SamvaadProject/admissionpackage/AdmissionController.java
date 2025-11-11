@@ -5,6 +5,7 @@ import com.example.SamvaadProject.coursepackage.CourseRepository;
 import com.example.SamvaadProject.emailservicespackage.EmailService;
 import com.example.SamvaadProject.feespackage.FeePayment;
 import com.example.SamvaadProject.feespackage.FeeRepository;
+import com.example.SamvaadProject.studentbatchpackage.StudentBatchMap;
 import com.example.SamvaadProject.studentbatchpackage.StudentBatchRepository;
 import com.example.SamvaadProject.usermasterpackage.UserMaster;
 import com.example.SamvaadProject.usermasterpackage.UserRepository;
@@ -13,9 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+
 @Controller
 public class AdmissionController {
 
@@ -85,7 +85,7 @@ public class AdmissionController {
             payment.setPaymentMode(paymentMode);
             feeRepository.save(payment);
 
-          //  emailService.getSendInvoice(newAdmission.getAdmissionId());
+            emailService.getSendInvoice(newAdmission.getAdmissionId());
 
         }
         redirectAttributes.addAttribute("newAdmissionAdded",true);
@@ -211,5 +211,22 @@ public class AdmissionController {
             format=year+""+mm+""+counter;
         }
         return format;
+    }
+
+
+
+    // Delete Student Admission
+    @PostMapping("/admin/delete/admission")
+    @ResponseBody
+    public Map<String,Boolean> getStudentAdmissionDelete(@RequestParam("admissionId")String admissionId){
+        Map<String,Boolean>response=new HashMap<>();
+            System.out.println("Inside the Delete Admission method");
+            AdmissionMaster admissionMaster=admissionRepository.findById(admissionId).get();
+            System.out.println("Student Name "+admissionMaster.getUserMaster().getFullName());
+//            feeRepository.getDeleteFeeByAdmissionId(admissionRepository.findById(admissionId).get());
+            admissionRepository.deleteById(admissionId);
+            response.put("admissionDeleted",true);
+
+        return response;
     }
 }
