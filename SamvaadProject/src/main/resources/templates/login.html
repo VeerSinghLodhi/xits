@@ -215,6 +215,22 @@
           clip: rect(0, 0, 0, 0);
           border-width: 0;
         }
+
+        .toggle-password {
+          position: absolute;
+          top: 50%;
+          right: 1rem;
+          transform: translateY(-50%);
+          color: var(--text-secondary);
+          font-size: 1.125rem;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .toggle-password:hover {
+          color: var(--primary-dark);
+        }
+
     </style>
 </head>
 <body>
@@ -245,12 +261,21 @@
                 </div>
             </div>
 
+<!--            <div class="form-group">-->
+<!--                <div class="input-wrapper">-->
+<!--                    <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>-->
+<!--                    <i class="bi bi-lock-fill input-icon"></i>-->
+<!--                </div>-->
+<!--            </div>-->
             <div class="form-group">
                 <div class="input-wrapper">
                     <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
                     <i class="bi bi-lock-fill input-icon"></i>
+                    <!-- Eye toggle icon -->
+                    <i class="bi bi-eye-fill toggle-password" id="togglePassword"></i>
                 </div>
             </div>
+
 
             <div class="forgot-password-wrapper">
                 <a href="/request-password-update" class="forgot-link">
@@ -266,6 +291,21 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    const togglePassword = document.getElementById("togglePassword");
+    const passwordField = document.getElementById("password");
+
+    togglePassword.addEventListener("click", () => {
+      const isPassword = passwordField.type === "password";
+      passwordField.type = isPassword ? "text" : "password";
+
+      // Toggle icon
+      togglePassword.classList.toggle("bi-eye-fill");
+      togglePassword.classList.toggle("bi-eye-slash-fill");
+    });
+</script>
+
 </body>
 </html>
 
