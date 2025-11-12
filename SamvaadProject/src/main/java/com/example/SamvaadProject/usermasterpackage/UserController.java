@@ -7,6 +7,7 @@ import com.example.SamvaadProject.assignmentpackage.*;
 import com.example.SamvaadProject.attendancepackage.AttendanceMaster;
 import com.example.SamvaadProject.batchmasterpackage.BatchMaster;
 import com.example.SamvaadProject.batchmasterpackage.BatchMasterRepository;
+import com.example.SamvaadProject.batchmaterialpackage.BatchMaterialRepository;
 import com.example.SamvaadProject.coursepackage.CourseMaster;
 import com.example.SamvaadProject.coursepackage.CourseRepository;
 import com.example.SamvaadProject.emailservicespackage.EmailService;
@@ -39,6 +40,8 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 
 @Controller
@@ -80,11 +83,6 @@ public class UserController {
     @GetMapping("/login")
     public String showLoginPage() {
         return "login";
-    }
-
-     @GetMapping("/")
-    public String showLoginPage1() {
-        return "redirect:/login";
     }
 
 
@@ -332,7 +330,7 @@ public class UserController {
 
         List<Long> batchIds = batchId != null
                 ? Collections.singletonList(batchId)
-                : batches.stream().map(BatchMaster::getBatchId).collect(Collectors.toList());
+                : batches.stream().map(BatchMaster::getBatchId).collect(toList());
 
         List<AssignmentMaster> assignments = batchIds.isEmpty()
                 ? Collections.emptyList()
@@ -518,7 +516,7 @@ public class UserController {
             userRepository.save(newUser);
             System.out.println("After Registration");
             redirectAttributes.addAttribute("newUserAdded",true);
-              emailService.getSendUsernameAndPassword(newUser.getFullName(),newUser.getUsername(),"Xits@143",newUser.getEmail());
+            emailService.getSendUsernameAndPassword(newUser.getFullName(),newUser.getUsername(),"Xits@143",newUser.getEmail());
             return "redirect:/admin/dashboard#student";
 
         }catch(Exception e){
@@ -529,22 +527,11 @@ public class UserController {
 
     }
 
-    public String getGenerateUsername(String uName, LocalDate dob) {
-    uName = uName.toLowerCase().replaceAll("\\s+", "");
-    String namePart = uName.length() >= 4 ? uName.substring(0, 4) : uName;
-
-    Long count = userRepository.getMaxCount() + 1;   // next user count
-    String countPart = String.format("%02d", count); // ensures 01, 02, 03 ... 10, 11, etc.
-
-    return namePart + countPart + dob.getYear();
-}
-
-
-  /*  public String getGenerateUsername(String uName, LocalDate dob){
+    public String getGenerateUsername(String uName, LocalDate dob){
         uName = uName.toLowerCase().replaceAll("\\s+", "");
         return (uName.length() >= 4 ? uName.substring(0, 4) : uName)+""+(userRepository.getMaxCount()+1)+""+dob.getYear();
     }
-*/
+
     @GetMapping("/userphoto/{userId}")
     ResponseEntity<byte[]>getUserProfile(@PathVariable("userId")Long userId){
 
@@ -633,9 +620,35 @@ public class UserController {
     }
 
 
+    @Autowired
+    BatchMaterialRepository batchMaterialRepository;
+
     @GetMapping("/course/material/batch/{batchId}")
     @ResponseBody
     public List<PdfDTO> getMaterialByBatch(@PathVariable("batchId")Long batchId){
+        return batchMaterialRepository.findByBatch_BatchId(batchId)
+                .stream()
+                .map(material->new PdfDTO(material.getPdfMaster().getDocumentName(),
+                        material.getPdfMaster().getUploadedAt().toString(),
+                        material.getPdfMaster().getPdfId()))
+                .toList();
+//        Long courseId=batchMasterRepository.findById(batchId).orElse(null).getCourse().getCourseId();
+//        return pdfRepository.findByCourse_CourseId(courseId)
+//                .stream()
+//                .map(pdf->new PdfDTO(pdf.getDocumentName(),pdf.getUploadedAt().toString(),pdf.getPdfId()))
+//                .toList();
+    }
+
+
+    @GetMapping("/faculty/course/material/batch/{batchId}")
+    @ResponseBody
+    public List<PdfDTO> getMaterialByBatchFaculty(@PathVariable("batchId")Long batchId){
+//        return batchMaterialRepository.findByBatch_BatchId(batchId)
+//                .stream()
+//                .map(material->new PdfDTO(material.getPdfMaster().getDocumentName(),
+//                        material.getPdfMaster().getUploadedAt().toString(),
+//                        material.getPdfMaster().getPdfId()))
+//                .toList();
         Long courseId=batchMasterRepository.findById(batchId).orElse(null).getCourse().getCourseId();
         return pdfRepository.findByCourse_CourseId(courseId)
                 .stream()
@@ -745,7 +758,7 @@ public ResponseEntity<byte[]> getResume(@PathVariable("pdfId")Long pdfId) {
 
         if(master!=null){
             String otp = otpService.generateOtp(master.getEmail());
-             emailService.sendOtpEmail(master.getEmail(), otp);
+            emailService.sendOtpEmail(master.getEmail(), otp);
             response.replace("otpSent",false,true);
         }else{
             response.replace("usernameNotFound",false,true);
