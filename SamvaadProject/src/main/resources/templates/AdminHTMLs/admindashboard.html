@@ -1279,34 +1279,38 @@
                       enctype="multipart/form-data">
                       <div class="mb-3">
                         <label class="form-label">Full Name</label>
-                        <input type="text" class="form-control" name="fullName" th:value="${newUser.fullName}" placeholder="Enter full name" required>
+                        <input type="text" class="form-control" name="fullName" th:value="${newUser.fullName}"
+                          placeholder="Enter full name" required>
                       </div>
 
                       <div class="mb-3">
                         <label class="form-label">Email</label>
-                        <input type="email" class="form-control" name="email" th:value="${newUser.email}" placeholder="Enter email address" required>
+                        <input type="email" class="form-control" name="email" th:value="${newUser.email}"
+                          placeholder="Enter email address" required>
                       </div>
 
                       <div class="mb-3">
                         <label class="form-label">Contact No</label>
-                        <input type="text" class="form-control" name="contactNo" th:value="${newUser.contactNo}" placeholder="Enter contact number"
-                          maxlength="15" required>
+                        <input type="text" class="form-control" name="contactNo" th:value="${newUser.contactNo}"
+                          placeholder="Enter contact number" maxlength="15" required>
                       </div>
 
                       <div class="mb-3">
                         <label class="form-label">Date of Birth</label>
-                        <input type="date" class="form-control" th:value="${newUser.dob}" name="dob"  required>
+                        <input type="date" class="form-control" th:value="${newUser.dob}" name="dob" required>
                       </div>
 
                       <div class="mb-3">
                         <label class="form-label">Address</label>
-                        <textarea class="form-control" th:value="${newUser.address}" name="address" placeholder="Enter address" required></textarea>
+                        <textarea class="form-control" th:value="${newUser.address}" name="address"
+                          placeholder="Enter address" required></textarea>
                         <!--                        <input type="text" class="form-control" th:value="${newUser.address}" name="address">-->
                       </div>
 
                       <div class="mb-3">
                         <label class="form-label">City</label>
-                        <input type="text" class="form-control" th:value="${newUser.city}" name="city" placeholder="Enter city name" required>
+                        <input type="text" class="form-control" th:value="${newUser.city}" name="city"
+                          placeholder="Enter city name" required>
                       </div>
 
                       <div class="mb-3">
@@ -1671,10 +1675,13 @@
                     <button class="nav-link" id="addfee" data-bs-toggle="tab" data-bs-target="#addfees"
                       type="button">Fee</button>
                   </li>
-                  
+                  <!--                  <li class="nav-item" role="presentation">-->
+                  <!--                    <button class="nav-link" id="delete-admission" data-bs-toggle="tab"-->
+                  <!--                      data-bs-target="#delete_admission" type="button">Delete</button>-->
+                  <!--                  </li>-->
                   <li class="nav-item" role="presentation">
                     <button class="nav-link" id="admission-tab" data-bs-toggle="tab" data-bs-target="#alladmission"
-                      type="button">All Admissions</button>
+                      type="button">Admissions</button>
                   </li>
                 </ul>
 
@@ -2064,7 +2071,7 @@
                           <tr>
                             <th>Admission ID</th>
                             <th>Student Name</th>
-                            <th>Presenties</th>
+                            <th>presence</th>
                             <th>Percentage</th>
                             <th>Remark</th>
                           </tr>
@@ -2092,7 +2099,7 @@
           <div th:insert="~{fragments :: footer}"></div>
         </div>
 
-        <!-- Faculties Part -->
+        <!-- Faculty's Part -->
         <div id="allfaculties" class="dashboard-section">
           <h4 class="mt-3">Faculty Management</h4>
           <div class="row mt-2">
@@ -2282,7 +2289,7 @@
           <div th:insert="~{fragments :: footer}"></div>
         </div>
 
-        <!-- Course Part -->
+        <!-- Course's Part -->
         <div id="course-part" class="dashboard-section">
           <h4 class="mt-3">Course Management</h4>
           <div class="row mt-2">
@@ -2473,7 +2480,7 @@
 
         </div>
 
-        <!-- Batch Part -->
+        <!-- Batch's Part -->
         <div id="batch-part" class="dashboard-section">
           <h4 class="mt-3">Batch Management</h4>
           <div class="row mt-2">
@@ -2550,7 +2557,8 @@
                     <form method="post" th:action="@{'/admin/assign'}" th:object="${newbatch}">
                       <div class="mb-3">
                         <label for="batch" class="form-label">Batch Name</label>
-                        <input type="text" id="batch" name="name" class="form-control" required>
+                        <input type="text" id="batch" name="name" class="form-control" placeholder="Enter batch name"
+                          required>
                       </div>
                       <div class="mb-3">
                         <label for="course" class="form-label">Course</label>
@@ -2641,7 +2649,7 @@
                   <div class="tab-pane fade" role="tabpanel" id="assignbatch">
                     <h4 class="text-center mb-4">Assign Students to Batch</h4>
 
-                    <form id="studentBatchForm" method="POST" th:action="@{'/admin/studentbatch/save'}">
+                    <form id="studentBatchForm" method="POST" onsubmit="return checkFoundStudent();" th:action="@{'/admin/studentbatch/save'}">
                       <!-- Batch Dropdown -->
                       <div class="mb-3">
                         <label for="batchId" class="form-label">Select Batch</label>
@@ -3248,42 +3256,22 @@
       window.addEventListener('hashchange', parseAndActivateHash);
     });
 
+  function checkFoundStudent(){
+    const batchSelect = document.getElementById('admissionIds');
+    const selectedValue = batchSelect.value;
+    const selectedText = batchSelect.options[batchSelect.selectedIndex].text;
+    console.log('Selected text  '+ selectedText);
+    if(selectedText === 'No students available'){
+      alert('No students available!');
+      return false;
+    }
+    return true;
 
+    }
 
 
   </script>
-  <script>
-    /* document.addEventListener('DOMContentLoaded', function () {
-       const navLinks = document.querySelectorAll('.nav-link');
-       const sections = document.querySelectorAll('.dashboard-section');
-       const sidebar = document.getElementById('sidebarMenu');
-   
-       navLinks.forEach(link => {
-         link.addEventListener('click', function (e) {
-           e.preventDefault();
-   
-           // Remove active from all links and sections
-           navLinks.forEach(l => l.classList.remove('active'));
-           sections.forEach(section => section.classList.remove('active'));
-   
-           // Add active to clicked link + show section
-           this.classList.add('active');
-           const targetId = this.getAttribute('href').substring(1);
-           document.getElementById(targetId)?.classList.add('active');
-   
-           // Collapse sidebar if on small screen
-           if (window.innerWidth < 992 && sidebar) {
-             const collapseInstance = bootstrap.Collapse.getOrCreateInstance(sidebar);
-             collapseInstance.hide();
-           }
-         });
-       });
-   
-       // Show default section
-       document.querySelector('.dashboard-section.active')?.classList.add('active');
-     }); */
-  </script>
-
+  
   <!--Show all material-->
   <script>
 
@@ -3714,6 +3702,78 @@
   <script>
     document.getElementById("registerForm").addEventListener("submit", function (event) {
       event.preventDefault(); // stop immediate submission
+
+
+
+      let fullName = document.querySelector("[name='fullName']").value.trim();
+      let email = document.querySelector("[name='email']").value.trim();
+      let contactNo = document.querySelector("[name='contactNo']").value.trim();
+      let dob = document.querySelector("[name='dob']").value;
+      let address = document.querySelector("[name='address']").value.trim();
+      let city = document.querySelector("[name='city']").value.trim();
+      let role = document.querySelector("[name='role']").value;
+
+      // Regex patterns
+      const namePattern = /^[A-Za-z ]{3,50}$/;
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const phonePattern = /^[0-9]{10,15}$/;
+
+      // Full name validation
+      if (!namePattern.test(fullName)) {
+        alert("⚠️ Please enter a valid full name (only letters, min 3 characters).");
+        event.preventDefault();
+        return;
+      }
+
+      // Email validation
+      if (!emailPattern.test(email)) {
+        alert("⚠️ Please enter a valid email address.");
+        event.preventDefault();
+        return;
+      }
+
+      // Contact number validation
+      if (!phonePattern.test(contactNo)) {
+        alert("⚠️ Please enter a valid contact number (10–15 digits).");
+        event.preventDefault();
+        return;
+      }
+
+
+      // Date of Birth validation — Year must be between 1990 and 2015
+      let dobDate = new Date(dob);
+      let birthYear = dobDate.getFullYear();
+
+      if (birthYear < 1990 || birthYear > 2015) {
+        alert("⚠️ Year of birth must be between 1990 and 2015.");
+        event.preventDefault();
+        return;
+      }
+
+      // Address validation
+      if (address.length < 5) {
+        alert("⚠️ Please enter a valid address (min 5 characters).");
+        event.preventDefault();
+        return;
+      }
+
+      // City validation
+      if (!/^[A-Za-z ]+$/.test(city)) {
+        alert("⚠️ Please enter a valid city name.");
+        event.preventDefault();
+        return;
+      }
+
+      // Role validation
+      if (role === "" || role === null) {
+        alert("⚠️ Please select a role.");
+        event.preventDefault();
+        return;
+      }
+
+
+
+
       let btn = document.getElementById("registerButton");
       btn.disabled = true;
       btn.value = "⏳ Processing...";
@@ -4132,6 +4192,7 @@
             option.text = "No students available";
             option.disabled = true;
             option.selected = true;
+            option.value = "NoStudentFound";
             admissionSelect.appendChild(option);
           } else {
             filteredAdmissions.forEach(admission => {
