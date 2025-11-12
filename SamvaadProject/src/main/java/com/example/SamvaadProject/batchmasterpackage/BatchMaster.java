@@ -1,6 +1,7 @@
 package com.example.SamvaadProject.batchmasterpackage;
 
 import com.example.SamvaadProject.assignmentpackage.AssignmentMaster;
+import com.example.SamvaadProject.batchmaterialpackage.BatchMaterialMaster;
 import com.example.SamvaadProject.coursepackage.CourseMaster;
 import com.example.SamvaadProject.pdfpackage.PdfMaster;
 import com.example.SamvaadProject.studentbatchpackage.StudentBatchMap;
@@ -9,6 +10,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,10 +25,10 @@ public class BatchMaster {
     @JoinColumn(name = "courseId")
     private CourseMaster course;//
 
-    private String name;//veer
+    private String name;  //veer
     private LocalDateTime startDate;
     private LocalDate endDate;
-    private String status; // Active, Completed, Pending
+    private String status;  // Active, Completed, Pending
     private String mode;
 
     @ManyToOne
@@ -39,8 +41,9 @@ public class BatchMaster {
     @OneToMany(mappedBy = "batch", cascade = CascadeType.ALL)
     private List<AssignmentMaster> assignments;
 
-//    @OneToMany(mappedBy = "pdfs", cascade = CascadeType.ALL)
-//    private List<PdfMaster> pdfs;
+    @OneToMany(mappedBy = "batch", cascade = CascadeType.ALL)
+    private List<BatchMaterialMaster> batchMaterialMasters=new ArrayList<>();
+
 
     public Long getBatchId() {
         return batchId;
