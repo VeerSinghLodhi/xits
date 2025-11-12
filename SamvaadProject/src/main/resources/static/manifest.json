@@ -1,0 +1,21 @@
+{
+  "name": "Xitsa",
+  "short_name": "Xitsa",
+  "description": "Xitsa IT Solutions — Faculty & Student Portal",
+  "start_url": "/login",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0d6efd",
+  "icons": [
+    {
+      "src": "/icons/xansaitsulutionsLogo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/xansaitsulutionsLogo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
