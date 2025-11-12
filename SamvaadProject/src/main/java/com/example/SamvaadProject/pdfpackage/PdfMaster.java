@@ -1,9 +1,12 @@
 package com.example.SamvaadProject.pdfpackage;
 
+import com.example.SamvaadProject.batchmaterialpackage.BatchMaterialMaster;
 import com.example.SamvaadProject.coursepackage.CourseMaster;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "pdf_master")
@@ -15,6 +18,9 @@ public class PdfMaster {
     @ManyToOne
     @JoinColumn(name = "courseId")
     private CourseMaster course;
+
+    @OneToMany(mappedBy = "pdfMaster", cascade = CascadeType.ALL)
+    private List<BatchMaterialMaster> batchMaterialMasters=new ArrayList<>();
 
     @Column(name="documentname")
     private String documentName;
